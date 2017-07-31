@@ -55,11 +55,17 @@ const Room = (props) => {
     );
 };
 
+const ds = new ListView.DataSource({
+    rowHasChanged: (r1, r2) => r1.room !== r2.room
+});
+
 export default function(props) {
-    const ds = new ListView.DataSource({
-        rowHasChanged: (r1, r2) => r1.room !== r2.room
-    });
+
     const rooms = props.rooms;
+    const toggleColor = props.forceAll
+        ? 'gray'
+        : 'white';
+
     return (
         <Container>
             <Header>
@@ -67,9 +73,11 @@ export default function(props) {
                     <Title>All Rooms</Title>
                 </Body>
                 <Right>
-                    <Icon name='logo-rss' style={{
-                        color: 'gray'
-                    }}/>
+                    <Button transparent onPress={props.toggleForceAll}>
+                        <Icon name='logo-rss' style={{
+                            color: toggleColor
+                        }}/>
+                    </Button>
                 </Right>
             </Header>
             <ListView enableEmptySections={true} dataSource={ds.cloneWithRows(rooms)} renderRow= { e => <Room data={e}/> }/>

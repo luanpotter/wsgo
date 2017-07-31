@@ -1,7 +1,7 @@
 import Beacons from 'react-native-beacons-manager';
 import {DeviceEventEmitter} from 'react-native';
 
-const THRESHOLD = 2.75;
+const THRESHOLD = 1;
 
 const registerBeaconScanner = update => {
     // Beacons.setForegroundScanPeriod(1000);

@@ -35,7 +35,7 @@ export default class StateController {
     }
 
     mount = () => {
-        registerBeaconScanner(currentBeacon => this._updateCurrentBeacon(currentBeacon));
+        registerBeaconScanner(currentBeacon => this._updateBeaconInformation(currentBeacon));
     };
 
     umount = () => {
@@ -43,9 +43,14 @@ export default class StateController {
     };
 
     forceAll = () => {
-        console.log('ha');
         this.setState({
             forceAll: true
+        });
+    };
+
+    toggleForceAll = () => {
+        this.setState({
+            forceAll: !this.app.state.forceAll
         });
     };
 
@@ -61,7 +66,7 @@ export default class StateController {
         setInterval(() => this._fetchRooms(), REFRESH_ROOMS_INTERVAL);
     }
 
-    _updateCurrentBeacon = (b) => {
+    _updateBeaconInformation = (b) => {
         const beacons = this.beacons;
         const key = b.minor;
 
@@ -84,20 +89,31 @@ export default class StateController {
         Object.assign(beacon, info);
 
         beacons[key] = beacon;
-        const currentBeacon = this._getCloserBeacon();
-
-        if (this.app.state.currentBeacon === undefined || this.app.state.currentBeacon.name !== currentBeacon.name) {
-            this.setState({
-                currentBeacon
-            });
-        }
+        this._setCurrentBeacon();
     };
 
     _clearBeacon(key) {
         const beacons = this.beacons;
         delete beacons[key];
-        this.setState(beacons);
+        this._setCurrentBeacon();
     }
+
+    _setCurrentBeacon = () => {
+        const currentBeacon = this._getCloserBeacon();
+        const prevBeacon = this.app.state.currentBeacon;
+
+        if (!currentBeacon && prevBeacon) {
+            this.setState({
+                currentBeacon: undefined
+            });
+        }
+
+        if (currentBeacon && (!prevBeacon || prevBeacon.name !== currentBeacon.name)) {
+            this.setState({
+                currentBeacon
+            });
+        }
+    };
 
     _getCloserBeacon() {
         const beacons = Object.keys(this.beacons)

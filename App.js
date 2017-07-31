@@ -39,7 +39,7 @@ export default class App extends React.Component {
         // const beacon = BEACONS_INFO[59504];
 
         if (!room || this.state.forceAll) {
-            return <All rooms={this.state.rooms}/>;
+            return <All rooms={this.state.rooms} forceAll={this.state.forceAll} toggleForceAll={this.ctrl.toggleForceAll}/>;
         }
 
         return (
