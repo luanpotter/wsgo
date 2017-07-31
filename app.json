@@ -1,0 +1,9 @@
+{
+  "name": "wsgoreact",
+  "displayName": "wsgoreact",
+  "expo": {
+    "loading": {
+      "backgroundColor": "cyan"
+    }
+  }
+}
