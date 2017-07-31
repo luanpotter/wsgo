@@ -23,17 +23,17 @@ import BEACONS_INFO from './utils/beacons.js';
 import fetchRoom from './utils/CalendarService';
 
 const Room = (props) => {
-    const e = props.data;
+    const room = props.room;
 
-    const badgeColor = e.busy
+    const badgeColor = room.busy
         ? '#aa1111'
         : '#11aa11';
-    const badgeText = e.busy
+    const badgeText = room.busy
         ? 'Ocupado'
         : 'Livre';
 
     return (
-        <ListItem avatar>
+        <ListItem avatar onPress={() => props.onPress(room.name)}>
             <Left>
                 <Icon style={{
                     fontSize: 24,
@@ -41,8 +41,8 @@ const Room = (props) => {
                 }} name="calendar"/>
             </Left>
             <Body>
-                <Text>{e.title}</Text>
-                <Text note>{e.statusText}</Text>
+                <Text>{room.title}</Text>
+                <Text note>{room.statusText}</Text>
             </Body>
             <Right>
                 <Badge style={{
@@ -80,7 +80,7 @@ export default function(props) {
                     </Button>
                 </Right>
             </Header>
-            <ListView enableEmptySections={true} dataSource={ds.cloneWithRows(rooms)} renderRow= { e => <Room data={e}/> }/>
+            <ListView enableEmptySections={true} dataSource={ds.cloneWithRows(rooms)} renderRow={r => <Room onPress={props.onPress} room={r}/>}/>
         </Container>
     );
 }

@@ -36,10 +36,9 @@ export default class App extends React.Component {
         }
 
         const room = this.state.currentRoom;
-        // const beacon = BEACONS_INFO[59504];
 
-        if (!room || this.state.forceAll) {
-            return <All rooms={this.state.rooms} forceAll={this.state.forceAll} toggleForceAll={this.ctrl.toggleForceAll}/>;
+        if (!room) {
+            return <All rooms={this.state.rooms} onPress={this.ctrl.selectRoom} forceAll={this.state.forceAll} toggleForceAll={this.ctrl.toggleForceAll}/>;
         }
 
         return (

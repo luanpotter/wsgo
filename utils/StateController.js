@@ -20,8 +20,10 @@ const INIT_STATE = {
         token: undefined
     },
     forceAll: false,
+    rooms: [],
     currentBeacon: undefined,
-    rooms: []
+    currentRoom: undefined,
+    selectedRoom: undefined
 }
 
 export default class StateController {
@@ -44,13 +46,22 @@ export default class StateController {
 
     forceAll = () => {
         this.setState({
-            forceAll: true
+            forceAll: true,
+            currentRoom: undefined
         });
     };
 
     toggleForceAll = () => {
         this.setState({
             forceAll: !this.app.state.forceAll
+        });
+    };
+
+    selectRoom = (name) => {
+        const rooms = this.app.state.rooms;
+        const currentRoom = rooms.find(room => room.name === name);
+        this.setState({
+            currentRoom
         });
     };
 
@@ -135,7 +146,8 @@ export default class StateController {
                 const updateState = {
                     rooms
                 };
-                if (currentBeacon) {
+
+                if (currentBeacon && !this.app.state.forceAll) {
                     updateState.currentRoom = rooms.find(room => room.name === currentBeacon.name);
                 }
 
