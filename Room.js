@@ -49,46 +49,26 @@ const Event = (props) => {
     );
 };
 
-export default class Room extends React.Component {
+export default function(props) {
+    const room = props.room;
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            events: []
-        };
+    if (!room) {
+        return null;
     }
 
-    componentDidMount() {
-        this._update(this.props);
-    }
-
-    componentWillReceiveProps(nextProps) {
-        if (JSON.stringify(nextProps) != JSON.stringify(this.props)) {
-            this._update(nextProps);
-        }
-    }
-
-    render() {
-        const now = moment();
-        const events = this.state.events;
-        return (
-            <Container style={styles.container}>
-                <Header>
-                    <Button transparent onPress={this.props.back}>
-                        <Icon name='arrow-back'/>
-                    </Button>
-                    <Body>
-                        <Title>{this.props.beacon.title}</Title>
-                    </Body>
-                </Header>
-                <ListView enableEmptySections={true} dataSource={ds.cloneWithRows(events)} renderRow={e => <Event data={e}/>}/>
-            </Container>
-        );
-    }
-
-    _update(data) {
-        fetchRoom(data.beacon, data.auth).then(room => this.setState({events: room.events}))
-    }
+    return (
+        <Container style={styles.container}>
+            <Header>
+                <Button transparent onPress={props.back}>
+                    <Icon name='arrow-back'/>
+                </Button>
+                <Body>
+                    <Title>{room.title}</Title>
+                </Body>
+            </Header>
+            <ListView enableEmptySections={true} dataSource={ds.cloneWithRows(room.events)} renderRow={e => <Event data={e}/>}/>
+        </Container>
+    );
 }
 
 const styles = StyleSheet.create({

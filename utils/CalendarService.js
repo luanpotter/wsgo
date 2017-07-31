@@ -24,6 +24,7 @@ const fetchRoom = (beacon, auth) => {
             }
         })
         .then(response => ({
+            name: beacon.name,
             title: beacon.title,
             ...parseRoom(response._bodyText, now)
         }));

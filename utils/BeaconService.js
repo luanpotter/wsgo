@@ -22,6 +22,10 @@ const registerBeaconScanner = update => {
     });
 };
 
+const unregisterBeaconScanner = () => {
+
+};
+
 const mock = update => {
     setInterval(() => fetch('http://192.168.100.3:3000').then(req => {
         let minor = req._bodyText.trim();
@@ -31,4 +35,4 @@ const mock = update => {
     }), 750);
 };
 
-export default registerBeaconScanner;
+export {registerBeaconScanner, unregisterBeaconScanner};

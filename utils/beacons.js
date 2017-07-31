@@ -26,4 +26,10 @@ const BEACONS_INFO = {
     }
 };
 
-export default BEACONS_INFO;
+const BEACONS_INFO_ARRAY = Object.keys(BEACONS_INFO)
+    .map(key => BEACONS_INFO[key])
+
+export {
+    BEACONS_INFO,
+    BEACONS_INFO_ARRAY
+};

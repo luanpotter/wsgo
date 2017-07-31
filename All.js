@@ -55,40 +55,24 @@ const Room = (props) => {
     );
 };
 
-export default class All extends React.Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            rooms: []
-        };
-    }
-
-    componentDidMount() {
-        const keys = Object.keys(BEACONS_INFO);
-        const promises = keys.map(v => BEACONS_INFO[v]).map(b => fetchRoom(b, this.props.auth));
-        Promise.all(promises).then(rooms => this.setState({rooms}));
-    }
-
-    render() {
-        const ds = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1.room !== r2.room
-        });
-        const rooms = this.state.rooms;
-        return (
-            <Container>
-                <Header>
-                    <Body>
-                        <Title>All Rooms</Title>
-                    </Body>
-                    <Right>
-                        <Icon name='logo-rss' style={{
-                            color: 'gray'
-                        }}/>
-                    </Right>
-                </Header>
-                < ListView enableEmptySections={true} dataSource={ds.cloneWithRows(rooms)} renderRow= { e => <Room data={e}/> }/>
-            </Container>
-        );
-    }
+export default function(props) {
+    const ds = new ListView.DataSource({
+        rowHasChanged: (r1, r2) => r1.room !== r2.room
+    });
+    const rooms = props.rooms;
+    return (
+        <Container>
+            <Header>
+                <Body>
+                    <Title>All Rooms</Title>
+                </Body>
+                <Right>
+                    <Icon name='logo-rss' style={{
+                        color: 'gray'
+                    }}/>
+                </Right>
+            </Header>
+            <ListView enableEmptySections={true} dataSource={ds.cloneWithRows(rooms)} renderRow= { e => <Room data={e}/> }/>
+        </Container>
+    );
 }

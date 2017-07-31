@@ -4,7 +4,7 @@ import {StyleSheet, View} from 'react-native';
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
 
 
-const handler = (cb) => {
+const loginHandler = (cb) => {
     GoogleSignin.configure({scopes: ["https://www.googleapis.com/auth/calendar"], webClientId: '971985852714-qi0ngm24014mit3qv2filqhm6fsmgojl.apps.googleusercontent.com'}).then(() => {
         GoogleSignin.signIn().then(user => {
             cb(user.email, user.accessToken);
@@ -20,12 +20,12 @@ const LoginButton = (props) => {
             <GoogleSigninButton style={{
                 width: 312,
                 height: 96
-            }} size={GoogleSigninButton.Size.Wide} color={GoogleSigninButton.Color.Dark} onPress={() => handler(props.onUserLogged)}/>
+            }} size={GoogleSigninButton.Size.Wide} color={GoogleSigninButton.Color.Dark} onPress={() => loginHandler(props.onUserLogged)}/>
         </View>
     );
 }
 
-export {LoginButton, handler};
+export {LoginButton, loginHandler};
 
 const styles = StyleSheet.create({
     container: {
