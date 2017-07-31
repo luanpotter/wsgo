@@ -3,7 +3,7 @@ import React from 'react';
 import {StyleSheet, View, TextInput} from 'react-native';
 import {Container, Button, Text, Icon} from 'native-base';
 
-import {LoginButton} from './Login';
+import {LoginButton, handler} from './Login';
 
 import Room from './Room';
 import All from './All';
@@ -34,6 +34,7 @@ export default class App extends React.Component {
 
     componentDidMount() {
         registerBeaconScanner(b => this._updateBeacon(b));
+        handler(this._onUserLogged);
     }
 
     render() {

@@ -25,7 +25,7 @@ const LoginButton = (props) => {
     );
 }
 
-export {LoginButton};
+export {LoginButton, handler};
 
 const styles = StyleSheet.create({
     container: {
