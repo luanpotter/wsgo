@@ -28,6 +28,55 @@ const fetchRoom = (beacon, auth) => {
         }));
 };
 
+const injectFreeSlots = (now, events) => {
+    if(!now) {
+        return events;
+    }
+
+    const result = [];
+    let prev;
+
+    events.forEach(curr => {
+        if (!curr.startTime || !curr.endTime) {
+            return events;
+        }
+        if (prev) {
+            if (prev.endTime.isBefore(curr.startTime)) {
+                result.push({
+                    free: true,
+                    displayTime: prev.endTime.format('HH:mm'),
+                    startTime: prev.endTime,
+                    endTime: curr.startTime
+                });
+            }
+        } else {
+            if (curr.startTime.isAfter(now)) {
+                result.push({
+                    free: true,
+                    displayTime: now.format('HH:mm'),
+                    startTime: now,
+                    endTime: curr.startTime
+                });
+            }
+        }
+        result.push(curr);
+        prev = curr;
+    });
+
+    const last = events[events.length - 1];
+    const endOfDay = now.endOf('day')
+    if (last.endTime.isBefore(endOfDay)) {
+        result.push({
+            free: true,
+            displayTime: last.endTime.format('HH:mm'),
+            startTime: last.endTime,
+            endTime: endOfDay
+        });
+    }
+
+    return result;
+};
+
 const parseRoom = (responseText, now) => {
     const items = JSON.parse(responseText)
         .items;
@@ -90,7 +139,7 @@ const parseRoom = (responseText, now) => {
     const room = {
         busy: events.some(e => e.active),
         statusText: statusString(now, events),
-        events
+        events: injectFreeSlots(now, events)
     };
 
     return room;

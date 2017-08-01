@@ -33,11 +33,11 @@ describe('#parseRoom', () => {
 
     });
 
-    it.only('ignores old events and marks current event', () => {
+    it('ignores old events and marks current event', () => {
         const room = parseRoom(responseText, moment('2017-07-27T10:20:00-03:00'));
 
         expect(room.events.length)
-            .toBe(4);
+            .toBe(6);
 
         expect(room.events[0].organizer.name)
             .toBe('Marcel Danilo Canova Falcao');
@@ -47,6 +47,22 @@ describe('#parseRoom', () => {
 
         expect(room.events[1].active)
             .toBeFalsy();
+    });
+
+    it('marks free slots between meetings', () => {
+        const room = parseRoom(responseText, moment('2017-07-27T10:20:00-03:00'));
+
+        expect(room.events.length)
+            .toBe(6);
+
+        expect(room.events[0].free)
+            .toBeFalsy();
+
+        expect(room.events[2].free)
+            .toBeTruthy();
+
+        expect(room.events[5].free)
+            .toBeTruthy();
     });
 
 });
