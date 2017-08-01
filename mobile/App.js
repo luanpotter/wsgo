@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {Component} from 'react';
 
 import {StyleSheet, View, TextInput} from 'react-native';
 import {Container, Button, Text, Icon} from 'native-base';
@@ -11,10 +11,10 @@ import Room from './Room';
 import All from './All';
 import createEvent from './CreateEvent';
 
-import registerBeaconScanner from './utils/BeaconService'
-import {BEACONS_INFO} from './utils/beacons.js';
 
-export default class App extends React.Component {
+import registerBeaconScanner from './utils/BeaconService'
+
+export default class App extends Component {
 
     constructor(props) {
         super(props);

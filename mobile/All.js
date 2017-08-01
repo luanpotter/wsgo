@@ -19,7 +19,7 @@ import {
     Text
 } from 'native-base';
 
-import BEACONS_INFO from './utils/beacons.js';
+import {getBeacons} from './utils/BeaconService';
 import fetchRoom from './utils/CalendarService';
 
 const Room = (props) => {

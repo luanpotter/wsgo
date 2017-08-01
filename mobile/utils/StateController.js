@@ -1,9 +1,7 @@
 import {
-    BEACONS_INFO,
-    BEACONS_INFO_ARRAY
-} from './beacons.js';
-
-import {
+    loadBeacons,
+    getBeacons,
+    getBeaconsArray,
     registerBeaconScanner,
     unregisterBeaconScanner
 } from './BeaconService';
@@ -66,15 +64,17 @@ export default class StateController {
     };
 
     onUserLogged = (email, token) => {
-        this.setState({
-            session: {
-                logged: true,
-                email,
-                token
-            }
+        loadBeacons(email, () => {
+            this.setState({
+                session: {
+                    logged: true,
+                    email,
+                    token
+                }
+            });
+            this._fetchRooms()
+            setInterval(() => this._fetchRooms(), REFRESH_ROOMS_INTERVAL);
         });
-        this._fetchRooms()
-        setInterval(() => this._fetchRooms(), REFRESH_ROOMS_INTERVAL);
     }
 
     _updateBeaconInformation = (b) => {
@@ -92,8 +92,8 @@ export default class StateController {
             }, FADE_TIMEOUT)
         };
 
-        const info = key in BEACONS_INFO ?
-            BEACONS_INFO[key] :
+        const info = key in getBeacons() ?
+            getBeacons()[key] :
             {
                 name: 'UNKNOWN'
             };
@@ -138,7 +138,7 @@ export default class StateController {
     }
 
     _fetchRooms() {
-        const promises = BEACONS_INFO_ARRAY.map(b => fetchRoom(b, this.app.state.session.token));
+        const promises = getBeaconsArray().map(b => fetchRoom(b, this.app.state.session.token));
         Promise.all(promises)
             .then(rooms => {
                 const currentBeacon = this.app.state.currentBeacon;

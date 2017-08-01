@@ -28,6 +28,7 @@
     "react-native-beacons-manager": "^1.0.4",
     "react-native-google-signin": "^0.10.0",
     "react-native-material-design": "^0.3.7",
-    "react-native-popup-dialog": "^0.9.29"
+    "react-native-popup-dialog": "^0.9.29",
+    "yawp": "^1.0.37"
   }
 }
