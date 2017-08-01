@@ -1,6 +1,6 @@
 ## What's Going On?!
 
-IoT for your Metting Room.
+IoT for your Meeting Room.
 
 ### Features
 
