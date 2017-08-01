@@ -29,7 +29,7 @@ const fetchRoom = (beacon, auth) => {
 };
 
 const injectFreeSlots = (now, events) => {
-    if(!now) {
+    if (!now) {
         return events;
     }
 
@@ -51,7 +51,6 @@ const injectFreeSlots = (now, events) => {
             }
         } else {
             if (curr.startTime.isAfter(now)) {
-                console.log('here', now.format(), curr.startTime.format());
                 result.push({
                     free: true,
                     displayTime: now.format('HH:mm'),
@@ -64,15 +63,27 @@ const injectFreeSlots = (now, events) => {
         prev = curr;
     });
 
-    const last = events[events.length - 1];
-    const endOfDay = now.endOf('day')
-    if (last.endTime.isBefore(endOfDay)) {
+    if (events.length === 0) {
         result.push({
             free: true,
-            displayTime: last.endTime.format('HH:mm'),
-            startTime: last.endTime,
-            endTime: endOfDay
+            displayTime: now.format('HH:mm'),
+            startTime: now.clone(),
+            endTime: now.clone()
+                .endOf('day')
         });
+    }
+    else {
+        const last = events[events.length - 1];
+        const endOfDay = now.clone()
+            .endOf('day')
+        if (last.endTime.isBefore(endOfDay)) {
+            result.push({
+                free: true,
+                displayTime: last.endTime.format('HH:mm'),
+                startTime: last.endTime,
+                endTime: endOfDay
+            });
+        }
     }
 
     return result;
@@ -110,7 +121,7 @@ const parseRoom = (responseText, now) => {
             email: ''
         };
     };
-
+    
     const events = items
         .map(e => {
             e.startTime = e.start ? moment(e.start.dateTime) : undefined;
@@ -122,6 +133,10 @@ const parseRoom = (responseText, now) => {
                 return true;
             }
             return e.endTime.isSameOrAfter(now);
+        })
+        .filter(e => {
+            const self = e.attendees.find(a => a.self);
+            return self && self.responseStatus === 'accepted'
         })
         .map(e => {
             // console.log('e', e.summary, e.id, e.kind, e.status, e.start);

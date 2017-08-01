@@ -53,8 +53,6 @@ const Event = (props) => {
         ? '#eeffee'
         : null;
 
-
-    console.log('e', e.startTime.format(), e.endTime.format());
     return (
         <ListItem avatar style={{
             backgroundColor: bgColor,
