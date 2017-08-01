@@ -43,8 +43,13 @@ const Event = (props) => {
         ? 'Livre'
         : e.organizer.name;
     const note = e.free
-        ? humanizeDuration(moment.duration(e.endTime.diff(e.startTime)), { largest: 2, delimiter: ' e ', language: 'pt'})
+        ? humanizeDuration(moment.duration(e.endTime.diff(e.startTime)), {
+            largest: 2,
+            delimiter: ' e ',
+            language: 'pt'
+        })
         : e.text;
+
     const badgeColor = !e.free
         ? '#aa1111'
         : '#11aa11';
@@ -53,11 +58,16 @@ const Event = (props) => {
         ? '#eeffee'
         : null;
 
+    const onPress = e.free
+        ? props.onPress
+        : undefined;
+
     return (
         <ListItem avatar style={{
             backgroundColor: bgColor,
             marginLeft: 0
-        }}>
+        }} onPress={onPress}>
+
             <Left style={{
                 marginLeft: 10
             }}>
@@ -103,12 +113,9 @@ export default function(props) {
                     <Title>{room.title}</Title>
                 </Body>
             </Header>
-            <ListView enableEmptySections={true} dataSource={ds.cloneWithRows(room.events)} renderRow={e => <Event data={e}/>}/>
+            <ListView enableEmptySections={true} dataSource={ds.cloneWithRows(room.events)} renderRow={e => <Event onPress={props.schedule} data={e}/>}/>
         </Container>
     );
 }
 
-const styles = StyleSheet.create({
-    container: {
-    }
-});
+const styles = StyleSheet.create({container: {}});

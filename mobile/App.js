@@ -9,8 +9,7 @@ import StateController from './utils/StateController'
 
 import Room from './Room';
 import All from './All';
-import createEvent from './CreateEvent';
-
+import NewEvent from './NewEvent';
 
 import registerBeaconScanner from './utils/BeaconService'
 
@@ -45,15 +44,8 @@ export default class App extends Component {
             <Container style={{
                 height: '100%'
             }}>
-                <Room room={room} back={this.ctrl.forceAll}/>
-                <PopupDialog ref={(popupDialog) => {
-                    this.popupDialog = popupDialog;
-                }}>
-                    <View>
-                        <TextInput label='First Name' placeholder='First Name'/>
-                        <Button title="Do schedule!" onPress={() => this._doSchedule()}/>
-                    </View>
-                </PopupDialog>
+                {this.state.schedule && <NewEvent/>}
+                {!this.state.schedule && <Room room={room} back={this.ctrl.forceAll} schedule={this.ctrl.createEvent}/>}
             </Container>
         );
     }
@@ -70,17 +62,6 @@ export default class App extends Component {
     }
 
 }
-
-// <View style={{
-//     position: 'absolute',
-//     bottom: 0,
-//     width: '100%'
-// }}>
-//     <Button full success onPress={() => this._schedule(beacon)}>
-//         <Icon name='add-circle'/>
-//         <Text>Schedule Now</Text>
-//     </Button>
-// </View>
 
 const styles = StyleSheet.create({
     container: {

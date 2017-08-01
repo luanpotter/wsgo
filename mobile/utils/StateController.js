@@ -18,6 +18,7 @@ const INIT_STATE = {
         token: undefined
     },
     forceAll: false,
+    schedule: false,
     rooms: [],
     currentBeacon: undefined,
     currentRoom: undefined,
@@ -25,8 +26,7 @@ const INIT_STATE = {
 }
 
 export default class StateController {
-
-
+    
     beacons = {};
 
     constructor(app) {
@@ -52,6 +52,12 @@ export default class StateController {
     toggleForceAll = () => {
         this.setState({
             forceAll: !this.app.state.forceAll
+        });
+    };
+
+    createEvent = () => {
+        this.setState({
+            schedule: true
         });
     };
 
