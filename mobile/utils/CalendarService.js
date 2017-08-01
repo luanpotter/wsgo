@@ -69,13 +69,16 @@ const injectFreeSlots = (now, events) => {
             displayTime: now.format('HH:mm'),
             startTime: now.clone(),
             endTime: now.clone()
-                .endOf('day')
+                .add(1, 'days')
+                .startOf('day')
         });
     }
     else {
         const last = events[events.length - 1];
         const endOfDay = now.clone()
-            .endOf('day')
+            .add(1, 'days')
+            .startOf('day')
+
         if (last.endTime.isBefore(endOfDay)) {
             result.push({
                 free: true,
@@ -121,7 +124,7 @@ const parseRoom = (responseText, now) => {
             email: ''
         };
     };
-    
+
     const events = items
         .map(e => {
             e.startTime = e.start ? moment(e.start.dateTime) : undefined;
