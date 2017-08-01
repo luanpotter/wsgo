@@ -1,6 +1,12 @@
 ## What's Going On?!
 
-IoT for Metting Room.
+IoT for your Metting Room.
+
+### Features
+
+* Estimotes beacon support 
+* Google Calendar integration
+* Android and iOS apps
 
 ### Install
 
