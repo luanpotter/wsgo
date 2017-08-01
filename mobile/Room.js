@@ -19,10 +19,7 @@ import {
 
 import md5 from 'blueimp-md5';
 import moment from 'moment';
-import 'moment/locale/pt-br';
-
-moment.lang('pt-BR');
-
+import humanizeDuration from 'humanize-duration'
 
 import fetchRoom from './utils/CalendarService';
 
@@ -40,16 +37,13 @@ const createUriFor = (e) => {
 
 const Event = (props) => {
     const e = props.data;
-
-    console.log('e', e.endTime.diff(e.startTime));
-
     const uri = createUriFor(e);
 
     const title = e.free
-        ? 'Horário Livre'
+        ? 'Livre'
         : e.organizer.name;
     const note = e.free
-        ? moment.duration(e.endTime.diff(e.startTime)).humanize()
+        ? humanizeDuration(moment.duration(e.endTime.diff(e.startTime)), { largest: 2, delimiter: ' e ', language: 'pt'})
         : e.text;
     const badgeColor = !e.free
         ? '#aa1111'
@@ -59,6 +53,8 @@ const Event = (props) => {
         ? '#eeffee'
         : null;
 
+
+    console.log('e', e.startTime.format(), e.endTime.format());
     return (
         <ListItem avatar style={{
             backgroundColor: bgColor,

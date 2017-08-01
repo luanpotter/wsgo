@@ -21,6 +21,7 @@
   "dependencies": {
     "blueimp-md5": "^2.8.0",
     "expo": "^19.0.0",
+    "humanize-duration": "^3.10.1",
     "moment": "^2.18.1",
     "native-base": "^2.3.1",
     "react": "16.0.0-alpha.12",

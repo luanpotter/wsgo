@@ -51,10 +51,11 @@ const injectFreeSlots = (now, events) => {
             }
         } else {
             if (curr.startTime.isAfter(now)) {
+                console.log('here', now.format(), curr.startTime.format());
                 result.push({
                     free: true,
                     displayTime: now.format('HH:mm'),
-                    startTime: now,
+                    startTime: now.clone(),
                     endTime: curr.startTime
                 });
             }
