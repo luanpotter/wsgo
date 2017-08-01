@@ -138,9 +138,17 @@ export default class StateController {
     }
 
     _fetchRooms() {
-        const promises = getBeaconsArray().map(b => fetchRoom(b, this.app.state.session.token));
+        const promises = getBeaconsArray()
+            .map(b => fetchRoom(b, this.app.state.session.token));
+
         Promise.all(promises)
             .then(rooms => {
+
+                if (rooms.filter(r => r)
+                    .length === 0) {
+                    return;
+                }
+
                 const currentBeacon = this.app.state.currentBeacon;
 
                 const updateState = {

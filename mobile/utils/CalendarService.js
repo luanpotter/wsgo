@@ -4,8 +4,6 @@ import {
 } from './StatusGenerator.js';
 
 const fetchRoom = (beacon, auth) => {
-    // TODO remove mock
-    // const now = moment('2017-07-30T12:00:00-03:00');
     const now = moment();
 
     const d1 = now.format('YYYY-MM-DD');
@@ -33,6 +31,11 @@ const fetchRoom = (beacon, auth) => {
 const parseRoom = (responseText, now) => {
     const items = JSON.parse(responseText)
         .items;
+
+    if (!items) {
+        return;
+    }
+
     const date = d => (d && d.dateTime) ? moment(d.dateTime)
         .format('HH:mm') : 'All Day';
 

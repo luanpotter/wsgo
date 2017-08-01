@@ -1,6 +1,6 @@
 ## What's Going On?!
 
-IoT for Google Calendar.
+IoT for Metting Room.
 
 ### Install
 
