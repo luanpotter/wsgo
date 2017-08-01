@@ -4,6 +4,8 @@ IoT for Google Calendar.
 
 ### Install
 
-Customize the file `scripts/rooms.js` and execute `cd scripts && ./post.sh`.
+Customize your rooms at `scripts/rooms.js` and then run `cd scripts && ./post.sh`.
 
+### TODO
 
+(...)
