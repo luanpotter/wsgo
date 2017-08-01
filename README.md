@@ -1,4 +1,4 @@
-## Whats Going On?!
+## What's Going On?!
 
 IoT for Google Calendar.
 
