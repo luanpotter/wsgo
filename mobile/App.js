@@ -9,10 +9,13 @@ import StateController from './utils/StateController'
 
 import Room from './Room';
 import All from './All';
+import NewEvent from './NewEvent';
 import createEvent from './CreateEvent';
 
-
 import registerBeaconScanner from './utils/BeaconService'
+import moment from 'moment';
+
+const TEST = false;
 
 export default class App extends Component {
 
@@ -34,6 +37,8 @@ export default class App extends Component {
         if (!this.state.session.logged) {
             return null;
         }
+
+        if (TEST) return <NewEvent startTime={moment().hour(6).minute(30).second(0)} />;
 
         const room = this.state.currentRoom;
 
