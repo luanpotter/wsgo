@@ -12,6 +12,9 @@ import All from './All';
 import NewEvent from './NewEvent';
 
 import registerBeaconScanner from './utils/BeaconService'
+import moment from 'moment';
+
+const TEST = false;
 
 export default class App extends Component {
 
@@ -34,6 +37,8 @@ export default class App extends Component {
             return null;
         }
 
+        if (TEST) return <NewEvent startTime={moment().hour(6).minute(30).second(0)} />;
+
         const room = this.state.currentRoom;
 
         if (!room) {
@@ -43,7 +48,7 @@ export default class App extends Component {
         return (
             <Container style={{
                 height: '100%'
-            }}>
+            }}>            
                 {this.state.schedule && <NewEvent/>}
                 {!this.state.schedule && <Room room={room} back={this.ctrl.forceAll} schedule={this.ctrl.createEvent}/>}
             </Container>
