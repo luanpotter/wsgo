@@ -29,7 +29,7 @@ export default class NewEvent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: 'Quick Meeting',
+            name: 'Quick reservation',
             duration: '0:30',
             start: 0,
             end: 100
@@ -49,22 +49,18 @@ export default class NewEvent extends Component {
                         <Title>New Event</Title>
                     </Body>
                 </Header>
-                <View style={styles.form}>
-                    <MultiSlider touchDimensions={{
-                        height: 40,
-                        width: 40,
-                        borderRadius: 20
-                    }} min={0} max={100} sliderLength={300} onValuesChangeFinish={this.onSliderChange} values={[this.state.start, this.state.end]} containerStyle={styles.sliderContainerStyle} selectedStyle={styles.sliderSelectedStyle} unselectedStyle={styles.sliderUnselectedStyle} markerStyle={styles.sliderMarkerStyle} pressedMarkerStyle={styles.sliderPressedMarkerStyle} trackStyle={styles.sliderTrackStyle}/>
-                </View>
-                <Form >
-                    <Item floatingLabel>
-                        <Label>Name</Label>
-                        <Input value="Quick Meeting" onChangeText={name => this.setState({name})}/>
+                <Form style={styles.form}>
+                    <Item style={styles.clear} floatingLabel>
+                        <Label>Title</Label>
+                        <Input value={this.state.name} onChangeText={name => this.setState({name})}/>
                     </Item>
-                    <View style={{
-                        backgroundColor: 'red',
-                        padding: 40
-                    }}></View>
+                    <View style={styles.slider}>
+                        <MultiSlider touchDimensions={{
+                            height: 40,
+                            width: 40,
+                            borderRadius: 20
+                        }} min={0} max={100} sliderLength={300} onValuesChangeFinish={this.onSliderChange} values={[this.state.start, this.state.end]} containerStyle={styles.sliderContainerStyle} selectedStyle={styles.sliderSelectedStyle} unselectedStyle={styles.sliderUnselectedStyle} markerStyle={styles.sliderMarkerStyle} pressedMarkerStyle={styles.sliderPressedMarkerStyle} trackStyle={styles.sliderTrackStyle}/>
+                    </View>
                     <Button onPress={() => this._schedule()}>
                         <Text>Schedule!</Text>
                     </Button>
@@ -80,7 +76,18 @@ export default class NewEvent extends Component {
 };
 
 const styles = StyleSheet.create({
+    clear: {
+        marginLeft: 0,
+        paddingLeft: 0
+    },
     form: {
+        padding: 10,
+        marginRight: 20,
+        marginLeft: 20,
+    },
+    slider: {
+        paddingTop: 80,
+        paddingBottom: 30,
         flex: 1,
         flexDirection: 'column',
         alignItems: 'center',
