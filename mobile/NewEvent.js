@@ -54,6 +54,13 @@ export default class NewEvent extends Component {
                         <Label>Title</Label>
                         <Input value={this.state.name} onChangeText={name => this.setState({name})}/>
                     </Item>
+                    <View style={styles.periodContainer}>
+                        <View style={styles.period}>
+                            <Text style={styles.periodRange}>10:00</Text>
+                            <Text style={styles.periodDuration}>1 hora e 30 minutos</Text>
+                            <Text style={styles.periodRange}>14:00</Text>
+                        </View>
+                    </View>
                     <View style={styles.slider}>
                         <MultiSlider touchDimensions={{
                             height: 40,
@@ -61,8 +68,9 @@ export default class NewEvent extends Component {
                             borderRadius: 20
                         }} min={0} max={100} sliderLength={300} onValuesChangeFinish={this.onSliderChange} values={[this.state.start, this.state.end]} containerStyle={styles.sliderContainerStyle} selectedStyle={styles.sliderSelectedStyle} unselectedStyle={styles.sliderUnselectedStyle} markerStyle={styles.sliderMarkerStyle} pressedMarkerStyle={styles.sliderPressedMarkerStyle} trackStyle={styles.sliderTrackStyle}/>
                     </View>
-                    <Button onPress={() => this._schedule()}>
-                        <Text>Schedule!</Text>
+                    <Button style={styles.button} iconRight>
+                        <Text>Create Event</Text>
+                        <Icon name='cloud-upload'/>
                     </Button>
                 </Form>
             </Container>
@@ -83,10 +91,37 @@ const styles = StyleSheet.create({
     form: {
         padding: 10,
         marginRight: 20,
-        marginLeft: 20,
+        marginLeft: 20
+    },
+    periodContainer: {
+        marginTop: 40
+    },
+    periodLabel: {
+        fontSize: 15,
+        paddingLeft: 2,
+        color: '#868686',
+        marginBottom: 10
+    },
+    period: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingBottom: 6,
+        borderBottomWidth: 0.5,
+        borderColor: '#D9D5DC',
+        borderStyle: 'solid'
+    },
+    periodRange: {
+        fontSize: 20,
+        color: '#444',
+        fontWeight: 'bold'
+    },
+    periodDuration: {
+        paddingTop: 3,
+        fontSize: 14,
+        color: '#aaa'
     },
     slider: {
-        paddingTop: 80,
+        marginTop: 60,
         paddingBottom: 30,
         flex: 1,
         flexDirection: 'column',
@@ -120,8 +155,9 @@ const styles = StyleSheet.create({
     sliderUnselectedStyle: {
         backgroundColor: '#aaa'
     },
-    sliderContainerStyle: {
-        height: 40
+    button: {
+        marginTop: 40,
+        alignSelf: 'center'
     }
 });
 
