@@ -15,6 +15,7 @@ const fetchRoom = (beacon, auth) => {
     const url = `https://content.googleapis.com/calendar/v3/calendars/${room}/events?singleEvents=true&timeMax=${d2}T0%3A00%3A00-03%3A00&timeMin=${d1}T0%3A00%3A00-03%3A00&key=b5IH1R6GRJNWwFxteNYVRDBF`;
 
     // console.log(`curl -H \'Authorization: Bearer ${auth}\' \"${url}\"`);
+    console.log('room', beacon.title);
 
     return fetch(url, {
             headers: {
@@ -92,7 +93,7 @@ const injectFreeSlots = (now, events) => {
     return result;
 };
 
-const parseRoom = (responseText, now) => {
+const parseRoom = (responseText, now, title) => {
     const items = JSON.parse(responseText)
         .items;
 
@@ -116,6 +117,12 @@ const parseRoom = (responseText, now) => {
     };
 
     const extractOrganizer = (e) => {
+        if (e.visibility === 'private') {
+            return {
+                name: 'Private',
+                email: ''
+            }
+        }
         return e.organizer ? {
             name: e.organizer.displayName ? e.organizer.displayName : e.organizer.email,
             email: e.organizer.email
@@ -138,11 +145,13 @@ const parseRoom = (responseText, now) => {
             return e.endTime.isSameOrAfter(now);
         })
         .filter(e => {
+            if (e.visibility === 'private') {
+                return true;
+            }
             const self = e.attendees.find(a => a.self);
             return self && self.responseStatus === 'accepted'
         })
         .map(e => {
-            // console.log('e', e.summary, e.id, e.kind, e.status, e.start);
             return {
                 text: e.summary,
                 displayTime: date(e.start),

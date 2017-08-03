@@ -19,6 +19,7 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "@ptomasroos/react-native-multi-slider": "0.0.8",
     "blueimp-md5": "^2.8.0",
     "expo": "^19.0.0",
     "humanize-duration": "^3.10.1",

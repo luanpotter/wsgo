@@ -32,7 +32,7 @@ const createUriFor = (e) => {
         return '';
     }
     const hash = md5(e.organizer.email);
-    return `https://www.gravatar.com/avatar/${hash}?s=400`;
+    return `https://www.gravatar.com/avatar/${hash}?s=400&d=404`;
 };
 
 const Event = (props) => {
@@ -69,19 +69,21 @@ const Event = (props) => {
         }} onPress={onPress}>
 
             <Left style={{
-                marginLeft: 10
+                marginLeft: 10,
             }}>
                 {!e.free && <Thumbnail source={{
                     uri
                 }}/>}
-                {e.free && <Icon name='add-circle' style={{
+                {e.free && <Icon name='add' style={{
                     color: '#11aa11',
-                    fontSize: 50,
-                    width: 55,
-                    textAlign: 'center'
+                    width: 60,
+                    textAlign: 'center',
+                    fontSize: 40,
                 }}/>}
             </Left>
-            <Body>
+            <Body style={{
+                minHeight: 74
+            }}>
                 <Text>{title}</Text>
                 <Text note>{note}</Text>
             </Body>
