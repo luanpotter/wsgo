@@ -14,7 +14,7 @@ import NewEvent from './NewEvent';
 import registerBeaconScanner from './utils/BeaconService'
 import moment from 'moment';
 
-const TEST = false;
+const TEST = true;
 
 export default class App extends Component {
 
@@ -48,7 +48,7 @@ export default class App extends Component {
         return (
             <Container style={{
                 height: '100%'
-            }}>            
+            }}>
                 {this.state.schedule && <NewEvent/>}
                 {!this.state.schedule && <Room room={room} back={this.ctrl.forceAll} schedule={this.ctrl.createEvent}/>}
             </Container>

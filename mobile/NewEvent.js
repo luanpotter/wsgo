@@ -25,14 +25,22 @@ import {
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
 export default class NewEvent extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
             name: 'Quick Meeting',
-            duration: '0:30'
+            duration: '0:30',
+            start: 0,
+            end: 100
         };
     }
 
+    onSliderChange = (values) => {
+        let start = values[0];
+        let end = values[1]
+        this.setState({start, end});
+    }
     render() {
         return (
             <Container>
@@ -42,25 +50,11 @@ export default class NewEvent extends Component {
                     </Body>
                 </Header>
                 <View style={styles.form}>
-                    <MultiSlider containerStyle={{
-                        height: 40
-                    }} selectedStyle={{
-                        backgroundColor: 'gold'
-                    }} unselectedStyle={{
-                        backgroundColor: 'silver'
-                    }} touchDimensions={{
-                        height: 80,
-                        width: 80,
-                        borderRadius: 40,
-                        slipDisplacement: 40
-                    }} markerStyle={{
-                        height: 30,
-                        width: 30,
-                        borderRadius: 15,
-                        backgroundColor: '#E8E8E8',
-                        borderWidth: 0.5,
-                        borderColor: 'grey'
-                    }} trackStyle={styles.sliderTrackStyle} values={[0, 100]} min={0} max={100} sliderLength={300}/>
+                    <MultiSlider touchDimensions={{
+                        height: 40,
+                        width: 40,
+                        borderRadius: 20
+                    }} min={0} max={100} sliderLength={300} onValuesChangeFinish={this.onSliderChange} values={[this.state.start, this.state.end]} containerStyle={styles.sliderContainerStyle} selectedStyle={styles.sliderSelectedStyle} unselectedStyle={styles.sliderUnselectedStyle} markerStyle={styles.sliderMarkerStyle} pressedMarkerStyle={styles.sliderPressedMarkerStyle} trackStyle={styles.sliderTrackStyle}/>
                 </View>
                 <Form >
                     <Item floatingLabel>
@@ -93,9 +87,34 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     sliderTrackStyle: {
-        height: 10,
-        backgroundColor: 'red',
-        paddingBottom: 4
+        height: 16,
+        top: -8,
+        borderRadius: 8
+    },
+    sliderMarkerStyle: {
+        height: 40,
+        width: 40,
+        borderRadius: 20,
+        backgroundColor: '#ddd',
+        borderWidth: 0.5,
+        borderColor: 'black'
+    },
+    sliderPressedMarkerStyle: {
+        height: 40,
+        width: 40,
+        borderRadius: 20,
+        backgroundColor: '#ddd',
+        borderWidth: 0.5,
+        borderColor: 'black'
+    },
+    sliderSelectedStyle: {
+        backgroundColor: '#11aa11'
+    },
+    sliderUnselectedStyle: {
+        backgroundColor: '#aaa'
+    },
+    sliderContainerStyle: {
+        height: 40
     }
 });
 
@@ -121,3 +140,4 @@ const styles = StyleSheet.create({
 //     </Form>
 // </Container>
 // ontainer>             </Form >
+// </Form >
