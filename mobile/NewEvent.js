@@ -21,6 +21,7 @@ import {
     Input,
     Form
 } from 'native-base';
+import moment from 'moment';
 
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
@@ -36,11 +37,22 @@ export default class NewEvent extends Component {
         };
     }
 
-    onSliderChange = (values) => {
+    onSliderChange(values) {
         let start = values[0];
         let end = values[1]
         this.setState({start, end});
     }
+
+    convertDates(startDate, endDate, startTime, endTime) {
+        let scale = endDate.diff(startDate, 'minutes');
+        let diff = (endTime - startTime)/100 * scale;
+        let startTime = startTime/100 * scale;
+        return {
+            start: startDate.add(startTime, 'minutes'),
+            end: moment(startDate).add(diff, 'minutes')
+        }
+    }
+
     render() {
         return (
             <Container>
