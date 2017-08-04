@@ -46,9 +46,9 @@ export default class NewEvent extends Component {
     convertDates(startDate, endDate, startTime, endTime) {
         let scale = endDate.diff(startDate, 'minutes');
         let diff = (endTime - startTime)/100 * scale;
-        let startTime = startTime/100 * scale;
+        let startTimeDiff = startTime/100 * scale;
         return {
-            start: startDate.add(startTime, 'minutes'),
+            start: startDate.add(startTimeDiff, 'minutes'),
             end: moment(startDate).add(diff, 'minutes')
         }
     }
