@@ -10,7 +10,11 @@ const loginHandler = (cb) => {
             cb(user.email, user.accessToken);
         }).catch(error => {
             console.log(`google login error: ${error}`);
+            setTimeout(() => loginHandler(cb), 500);
         });
+    }).catch(error => {
+        console.log(`google config error: ${error}`);
+        setTimeout(() => loginHandler(cb), 500);
     });
 }
 
