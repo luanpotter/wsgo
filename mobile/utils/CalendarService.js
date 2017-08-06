@@ -1,7 +1,5 @@
 import moment from 'moment';
-import {
-    statusString
-} from './StatusGenerator.js';
+import { statusString } from './StatusGenerator.js';
 
 const fetchRoom = (beacon, auth) => {
     const now = moment();
@@ -164,4 +162,38 @@ const parseRoom = (responseText, now, title) => {
     return room;
 };
 
-export { fetchRoom, parseRoom };
+const createEvent = (user, accessToken, roomEmail, startTime, endTime) => {
+    const userEncoded = encodeURIComponent(user);
+
+    const start = startTime.format('YYYY-MM-DDTHH:mm:ss-03:00');
+    const end = endTime.format('YYYY-MM-DDTHH:mm:ss-03:00');
+
+    const bodyJson = {
+        "end": {
+            "dateTime": end
+        },
+        "start": {
+            "dateTime": start
+        },
+        "summary": "Quick Meeting",
+        "attendees": [{
+            "email": roomEmail
+        }]
+    };
+
+    const key = 'b5IH1R6GRJNWwFxteNYVRDBF';
+
+    const url = `https://content.googleapis.com/calendar/v3/calendars/${userEncoded}/events?alt=json&key=${key}`;
+
+    return fetch(url, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'content-type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(bodyJson)
+    });
+};
+
+
+export { fetchRoom, parseRoom, createEvent };

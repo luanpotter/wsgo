@@ -2,7 +2,6 @@ import React, {Component} from 'react';
 
 import {StyleSheet, View, TextInput} from 'react-native';
 import {Container, Button, Text, Icon} from 'native-base';
-import PopupDialog from 'react-native-popup-dialog';
 
 import {LoginButton, loginHandler} from './Login';
 import StateController from './utils/StateController'
@@ -47,18 +46,6 @@ export default class App extends Component {
             </Container>
         );
     }
-
-    _doSchedule = () => {
-        createEvent(this.state.email, this.state.token, this.state.selectedBeacon.room, response => {
-            this.popupDialog.dismiss();
-        });
-    }
-
-    _schedule = (selectedBeacon) => {
-        this.setState({selectedBeacon});
-        this.popupDialog.show();
-    }
-
 }
 
 const styles = StyleSheet.create({
