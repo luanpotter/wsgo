@@ -88,7 +88,7 @@ export default class NewEvent extends Component {
                             borderRadius: 20
                         }} min={0} max={100} sliderLength={300} onValuesChangeFinish={values => this.onSliderChange(values)} values={[this.state.start, this.state.end]} containerStyle={styles.sliderContainerStyle} selectedStyle={styles.sliderSelectedStyle} unselectedStyle={styles.sliderUnselectedStyle} markerStyle={styles.sliderMarkerStyle} pressedMarkerStyle={styles.sliderPressedMarkerStyle} trackStyle={styles.sliderTrackStyle}/>
                     </View>
-                    <Button style={styles.button} iconRight>
+                    <Button style={styles.button} iconRight onPress={() => this._schedule()}>
                         <Text>Create Event</Text>
                         <Icon name='cloud-upload'/>
                     </Button>
@@ -98,7 +98,11 @@ export default class NewEvent extends Component {
     }
 
     _schedule() {
-        console.log(this.state, this.props.startTime);
+        this.props.scheduleEvent({
+            name: this.state.name,
+            startDate: this.state.startDate,
+            endDate: this.state.endDate
+        });
     }
 
 };

@@ -6,9 +6,11 @@ import {
     unregisterBeaconScanner
 } from './BeaconService';
 
-import { fetchRoom } from './CalendarService';
+import { fetchRoom, createEvent } from './CalendarService';
 
 import moment from 'moment';
+
+import { ToastAndroid } from 'react-native';
 
 const FADE_TIMEOUT = 5000;
 const REFRESH_ROOMS_INTERVAL = 5000;
@@ -59,11 +61,32 @@ export default class StateController {
         });
     };
 
-    createEvent = (event) => {
+    createEvent = event => {
         this.setState({
             schedule: true,
             startDate: event.startTime,
             endDate: event.endTime
+        });
+    };
+
+    scheduleEvent = eventData => {
+        createEvent(this.app.state.session, this.app.state.currentRoom, eventData).then(data => {
+            console.log('Received success ', data);
+            const success = data.status === 'confirmed';
+            if (success) {
+                this._fetchRooms(() => {
+                    this.setState({
+                        schedule: false,
+                        currentRoom: this.app.state.rooms.find(room => room.name === this.app.state.currentRoom.name)
+                    });
+                    ToastAndroid.show('Successfully created event.', ToastAndroid.SHORT);
+                });
+            } else {
+                ToastAndroid.show('The event was created, but the room did not accept.', ToastAndroid.LONG);
+            }
+        }).catch(error => {
+            console.log('Received error ', error);
+            ToastAndroid.show('There was an unexpected error: ' + JSON.stringify(error), ToastAndroid.LONG);
         });
     };
 
@@ -149,34 +172,27 @@ export default class StateController {
             curr);
     }
 
-    _fetchRooms() {
-        const promises = getBeaconsArray()
-            .map(b => fetchRoom(b, this.app.state.session.token));
+    _fetchRooms(cb) {
+        const promises = getBeaconsArray().map(b => fetchRoom(b, this.app.state.session.token));
 
-        Promise.all(promises)
-            .then(rooms => {
+        Promise.all(promises).then(rooms => {
+            if (rooms.filter(r => r).length === 0) {
+                return;
+            }
 
-                if (rooms.filter(r => r)
-                    .length === 0) {
-                    return;
-                }
+            const currentBeacon = this.app.state.currentBeacon;
+            const updateState = { rooms };
 
-                const currentBeacon = this.app.state.currentBeacon;
+            if (currentBeacon && !this.app.state.forceAll) {
+                updateState.currentRoom = rooms.find(room => room.name === currentBeacon.name);
+            }
 
-                const updateState = {
-                    rooms
-                };
-
-                if (currentBeacon && !this.app.state.forceAll) {
-                    updateState.currentRoom = rooms.find(room => room.name === currentBeacon.name);
-                }
-
-                this.setState(updateState);
-            });
+            this.setState(updateState, cb);
+        });
     }
 
-    setState(state) {
-        this.app.setState(state);
+    setState(state, cb) {
+        this.app.setState(state, cb);
     }
 
     startDate() {

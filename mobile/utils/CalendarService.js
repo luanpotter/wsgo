@@ -11,7 +11,7 @@ const fetchRoom = (beacon, auth) => {
     const url = `https://content.googleapis.com/calendar/v3/calendars/${room}/events?singleEvents=true&timeMax=${d2}T0%3A00%3A00-03%3A00&timeMin=${d1}T0%3A00%3A00-03%3A00&key=b5IH1R6GRJNWwFxteNYVRDBF`;
 
     // console.log(`curl -H \'Authorization: Bearer ${auth}\' \"${url}\"`);
-    console.log('room', beacon.title);
+    // console.log('room', beacon.title);
 
     return fetch(url, {
             headers: {
@@ -21,6 +21,7 @@ const fetchRoom = (beacon, auth) => {
         .then(response => ({
             name: beacon.name,
             title: beacon.title,
+            email: beacon.room,
             ...parseRoom(response._bodyText, now)
         }));
 };
@@ -162,11 +163,12 @@ const parseRoom = (responseText, now, title) => {
     return room;
 };
 
-const createEvent = (user, accessToken, roomEmail, startTime, endTime) => {
-    const userEncoded = encodeURIComponent(user);
+const createEvent = (user, room, eventData) => {
+    const userEncoded = encodeURIComponent(user.email);
 
-    const start = startTime.format('YYYY-MM-DDTHH:mm:ss-03:00');
-    const end = endTime.format('YYYY-MM-DDTHH:mm:ss-03:00');
+    const {startDate, endDate, name} = eventData;
+    const start = startDate.format('YYYY-MM-DDTHH:mm:ss-03:00');
+    const end = endDate.format('YYYY-MM-DDTHH:mm:ss-03:00');
 
     const bodyJson = {
         "end": {
@@ -175,9 +177,9 @@ const createEvent = (user, accessToken, roomEmail, startTime, endTime) => {
         "start": {
             "dateTime": start
         },
-        "summary": "Quick Meeting",
+        "summary": name,
         "attendees": [{
-            "email": roomEmail
+            "email": room.email
         }]
     };
 
@@ -187,12 +189,12 @@ const createEvent = (user, accessToken, roomEmail, startTime, endTime) => {
 
     return fetch(url, {
         headers: {
-            Authorization: `Bearer ${accessToken}`,
+            Authorization: `Bearer ${user.token}`,
             'content-type': 'application/json'
         },
         method: 'POST',
         body: JSON.stringify(bodyJson)
-    });
+    }).then(response => JSON.parse(response._bodyText));
 };
 
 
