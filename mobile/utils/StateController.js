@@ -89,13 +89,15 @@ export default class StateController {
             console.log('Received success ', data);
             const success = data.status === 'confirmed';
             if (success) {
-                this._fetchRooms(() => {
-                    this.setState({
-                        schedule: false,
-                        currentRoom: this.app.state.rooms.find(room => room.name === this.app.state.currentRoom.name)
+                setTimeout(() => {
+                    this._fetchRooms(() => {
+                        this.setState({
+                            schedule: false,
+                            currentRoom: this.app.state.rooms.find(room => room.name === this.app.state.currentRoom.name)
+                        });
+                        ToastAndroid.show('Successfully created event.', ToastAndroid.SHORT);
                     });
-                    ToastAndroid.show('Successfully created event.', ToastAndroid.SHORT);
-                });
+                }, 250);
             } else {
                 ToastAndroid.show('The event was created, but the room did not accept.', ToastAndroid.LONG);
             }
