@@ -17,8 +17,7 @@ const fetchRoom = (beacon, auth) => {
             headers: {
                 Authorization: `Bearer ${auth}`
             }
-        })
-        .then(response => ({
+        }).then(response => ({
             name: beacon.name,
             title: beacon.title,
             email: beacon.room,
@@ -70,12 +69,9 @@ const injectFreeSlots = (now, events) => {
                 .add(1, 'days')
                 .startOf('day')
         });
-    }
-    else {
+    } else {
         const last = events[events.length - 1];
-        const endOfDay = now.clone()
-            .add(1, 'days')
-            .startOf('day')
+        const endOfDay = now.clone().add(1, 'days').startOf('day')
 
         if (last.endTime.isBefore(endOfDay)) {
             result.push({
@@ -97,8 +93,7 @@ const parseRoom = (responseText, now, title) => {
         return;
     }
 
-    const date = d => (d && d.dateTime) ? moment(d.dateTime)
-        .format('HH:mm') : 'All Day';
+    const date = d => (d && d.dateTime) ? moment(d.dateTime).format('HH:mm') : 'All Day';
 
     const checkActive = (e) => {
         if (!now) {
@@ -107,9 +102,7 @@ const parseRoom = (responseText, now, title) => {
         if (!e.start || !e.end) {
             return true;
         }
-        return moment(e.start.dateTime)
-            .isSameOrBefore(now) && moment(e.start.endTime)
-            .isSameOrAfter(now);
+        return moment(e.start.dateTime).isSameOrBefore(now) && moment(e.start.endTime).isSameOrAfter(now);
     };
 
     const extractOrganizer = (e) => {
@@ -171,20 +164,19 @@ const createEvent = (user, room, eventData) => {
     const end = endDate.format('YYYY-MM-DDTHH:mm:ss-03:00');
 
     const bodyJson = {
-        "end": {
-            "dateTime": end
+        end: {
+            dateTime: end
         },
-        "start": {
-            "dateTime": start
+        start: {
+            dateTime: start
         },
-        "summary": name,
-        "attendees": [{
-            "email": room.email
+        summary: name,
+        attendees: [{
+            email: room.email
         }]
     };
 
     const key = 'b5IH1R6GRJNWwFxteNYVRDBF';
-
     const url = `https://content.googleapis.com/calendar/v3/calendars/${userEncoded}/events?alt=json&key=${key}`;
 
     return fetch(url, {
