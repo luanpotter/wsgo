@@ -1,12 +1,6 @@
 import moment from 'moment';
-
-import {
-    response1
-} from './CalendarService.mock';
-
-import {
-    parseRoom
-} from './CalendarService';
+import { response1 } from './CalendarService.mock';
+import { parseRoom } from './CalendarService';
 
 const responseText = JSON.stringify(response1);
 

@@ -18,10 +18,7 @@ import {
 } from 'native-base';
 
 import md5 from 'blueimp-md5';
-import moment from 'moment';
-
 import { humanizeDiff } from './utils/Util';
-import fetchRoom from './utils/CalendarService';
 
 const ds = new ListView.DataSource({
     rowHasChanged: (r1, r2) => r1.summary !== r2.summary

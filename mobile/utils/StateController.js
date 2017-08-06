@@ -6,7 +6,7 @@ import {
     unregisterBeaconScanner
 } from './BeaconService';
 
-import fetchRoom from './CalendarService';
+import { fetchRoom } from './CalendarService';
 
 import moment from 'moment';
 

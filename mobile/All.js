@@ -19,9 +19,6 @@ import {
     Text
 } from 'native-base';
 
-import {getBeacons} from './utils/BeaconService';
-import fetchRoom from './utils/CalendarService';
-
 const Room = (props) => {
     const room = props.room;
 

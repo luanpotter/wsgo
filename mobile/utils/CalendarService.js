@@ -7,9 +7,7 @@ const fetchRoom = (beacon, auth) => {
     const now = moment();
 
     const d1 = now.format('YYYY-MM-DD');
-    const d2 = now.clone()
-        .add(+1, 'days')
-        .format('YYYY-MM-DD');
+    const d2 = now.clone().add(+1, 'days').format('YYYY-MM-DD');
 
     const room = beacon.room;
     const url = `https://content.googleapis.com/calendar/v3/calendars/${room}/events?singleEvents=true&timeMax=${d2}T0%3A00%3A00-03%3A00&timeMin=${d1}T0%3A00%3A00-03%3A00&key=b5IH1R6GRJNWwFxteNYVRDBF`;
@@ -94,8 +92,7 @@ const injectFreeSlots = (now, events) => {
 };
 
 const parseRoom = (responseText, now, title) => {
-    const items = JSON.parse(responseText)
-        .items;
+    const items = JSON.parse(responseText).items;
 
     if (!items) {
         return;
@@ -132,35 +129,29 @@ const parseRoom = (responseText, now, title) => {
         };
     };
 
-    const events = items
-        .map(e => {
-            e.startTime = e.start ? moment(e.start.dateTime) : undefined;
-            e.endTime = e.end ? moment(e.end.dateTime) : undefined;
-            return e;
-        })
-        .filter(e => {
-            if (!now || !e.end) {
-                return true;
-            }
-            return e.endTime.isSameOrAfter(now);
-        })
-        .filter(e => {
-            if (e.visibility === 'private') {
-                return true;
-            }
-            const self = e.attendees.find(a => a.self);
-            return self && self.responseStatus === 'accepted'
-        })
-        .map(e => {
-            return {
-                text: e.summary,
-                displayTime: date(e.start),
-                startTime: e.startTime,
-                endTime: e.endTime,
-                organizer: extractOrganizer(e),
-                active: checkActive(e)
-            }
-        });
+    const events = items.map(e => {
+        e.startTime = e.start ? moment(e.start.dateTime) : undefined;
+        e.endTime = e.end ? moment(e.end.dateTime) : undefined;
+        return e;
+    }).filter(e => {
+        if (!now || !e.end) {
+            return true;
+        }
+        return e.endTime.isSameOrAfter(now);
+    }).filter(e => {
+        if (e.visibility === 'private') {
+            return true;
+        }
+        const self = e.attendees.find(a => a.self);
+        return self && self.responseStatus === 'accepted'
+    }).map(e => ({
+        text: e.summary,
+        displayTime: date(e.start),
+        startTime: e.startTime,
+        endTime: e.endTime,
+        organizer: extractOrganizer(e),
+        active: checkActive(e)
+    }));
 
     events.sort((e1, e2) => e1.displayTime.localeCompare(e2.displayTime));
 
@@ -173,8 +164,4 @@ const parseRoom = (responseText, now, title) => {
     return room;
 };
 
-export default fetchRoom;
-
-export {
-    parseRoom
-};
+export { fetchRoom, parseRoom };
