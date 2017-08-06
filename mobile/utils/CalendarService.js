@@ -65,9 +65,7 @@ const injectFreeSlots = (now, events) => {
             free: true,
             displayTime: now.format('HH:mm'),
             startTime: now.clone(),
-            endTime: now.clone()
-                .add(1, 'days')
-                .startOf('day')
+            endTime: now.clone().add(1, 'days').startOf('day')
         });
     } else {
         const last = events[events.length - 1];

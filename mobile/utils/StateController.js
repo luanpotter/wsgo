@@ -89,15 +89,28 @@ export default class StateController {
             console.log('Received success ', data);
             const success = data.status === 'confirmed';
             if (success) {
-                setTimeout(() => {
+                const update = tryouts => {
+                    if (tryouts === 0) {
+                        ToastAndroid.show('There was an error fetching your event data, but it seems to have been created.', ToastAndroid.LONG);
+                    }
                     this._fetchRooms(() => {
-                        this.setState({
-                            schedule: false,
-                            currentRoom: this.app.state.rooms.find(room => room.name === this.app.state.currentRoom.name)
-                        });
-                        ToastAndroid.show('Successfully created event.', ToastAndroid.SHORT);
+                        const currentRoom = this.app.state.rooms.find(room => room.name === this.app.state.currentRoom.name);
+                        const areSame = (ev, evData) => ev.startTime.isSame(evData.startDate) && ev.endTime.isSame(evData.endDate) && ev.text === evData.name;
+                        const sameOrganizer = event => event.organizer.email === this.app.state.session.email;
+                        const newEventFound = currentRoom.events.some(event => areSame(event, eventData) && sameOrganizer);
+                        if (newEventFound) {
+                            this.setState({
+                                schedule: false,
+                                currentRoom
+                            });
+                            ToastAndroid.show('Successfully created event.', ToastAndroid.SHORT);
+                        } else {
+                            console.log('Failed to fetch newly created event from the server, let\'s try again shortly.');
+                            setTimeout(() => update(tryouts - 1), 250);
+                        }
                     });
-                }, 250);
+                };
+                update(10);
             } else {
                 ToastAndroid.show('The event was created, but the room did not accept.', ToastAndroid.LONG);
             }
