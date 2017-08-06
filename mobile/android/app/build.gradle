@@ -111,12 +111,6 @@ android {
             include "armeabi-v7a", "x86"
         }
     }
-    buildTypes {
-        release {
-            minifyEnabled enableProguardInReleaseBuilds
-            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
-        }
-    }
     // applicationVariants are e.g. debug, release
     applicationVariants.all { variant ->
         variant.outputs.each { output ->
@@ -136,6 +130,21 @@ android {
             keyAlias 'wsgo'
             keyPassword 'wsgo123'
             storePassword 'wsgo123'
+        }
+        release {
+            if (project.hasProperty('WSGO_RELEASE_STORE_FILE')) {
+                storeFile file(WSGO_RELEASE_STORE_FILE)
+                storePassword WSGO_RELEASE_STORE_PASSWORD
+                keyAlias WSGO_RELEASE_KEY_ALIAS
+                keyPassword WSGO_RELEASE_KEY_PASSWORD
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled enableProguardInReleaseBuilds
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            signingConfig signingConfigs.release
         }
     }
 }
