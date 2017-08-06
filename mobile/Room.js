@@ -37,7 +37,7 @@ const Event = (props) => {
     const uri = createUriFor(e);
 
     const title = e.free ? 'Livre' : e.organizer.name;
-    const note = e.free ? humanizeDiff(e.endTime.diff(e.startTime)) : e.text;
+    const note = e.free ? humanizeDiff(e.endTime.startOf('minute').diff(e.startTime.startOf('minute'))) : e.text;
     const badgeColor = !e.free ? '#aa1111' : '#11aa11';
     const bgColor = e.free ? '#eeffee' : null;
     const onPress = e.free ? props.onPress : undefined;

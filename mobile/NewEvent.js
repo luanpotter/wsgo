@@ -65,6 +65,9 @@ export default class NewEvent extends Component {
         return (
             <Container>
                 <Header>
+                    <Button transparent onPress={this.props.back}>
+                        <Icon name='arrow-back'/>
+                    </Button>
                     <Body>
                         <Title>New Event</Title>
                     </Body>

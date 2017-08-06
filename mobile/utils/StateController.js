@@ -69,6 +69,10 @@ export default class StateController {
         });
     };
 
+    cancelCreateEvent = () => {
+        this.setState({ schedule: false });
+    };
+
     scheduleEvent = eventData => {
         createEvent(this.app.state.session, this.app.state.currentRoom, eventData).then(data => {
             console.log('Received success ', data);
