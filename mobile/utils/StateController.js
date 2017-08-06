@@ -1,3 +1,6 @@
+import moment from 'moment';
+import { BackHandler, ToastAndroid } from 'react-native';
+
 import {
     loadBeacons,
     getBeacons,
@@ -5,12 +8,7 @@ import {
     registerBeaconScanner,
     unregisterBeaconScanner
 } from './BeaconService';
-
 import { fetchRoom, createEvent } from './CalendarService';
-
-import moment from 'moment';
-
-import { ToastAndroid } from 'react-native';
 
 const FADE_TIMEOUT = 5000;
 const REFRESH_ROOMS_INTERVAL = 5000;
@@ -27,8 +25,8 @@ const INIT_STATE = {
     currentBeacon: undefined,
     currentRoom: undefined,
     selectedRoom: undefined,
-    startDate: moment().hour(6).minute(30).second(0),
-    endDate: moment().hour(8).minute(0).second(0)
+    startDate: undefined,
+    endDate: undefined
 }
 
 export default class StateController {
@@ -42,10 +40,23 @@ export default class StateController {
 
     mount = () => {
         registerBeaconScanner(currentBeacon => this._updateBeaconInformation(currentBeacon));
+        BackHandler.addEventListener('main', () => {
+            if (this.app.state.schedule) {
+                this.setState({ schedule: false });
+                return true;
+            } else if (this.app.state.currentRoom) {
+                this.setState({ currentRoom: undefined });
+                return true;
+            } else {
+                return false;
+            }
+        });
     };
 
-    umount = () => {
+    unmount = () => {
         unregisterBeaconScanner();
+        this.roomTimer && clearInterval(this.roomTimer);
+        BackHandler.removeEventListener('main');
     };
 
     forceAll = () => {
@@ -112,7 +123,7 @@ export default class StateController {
                 }
             });
             this._fetchRooms()
-            setInterval(() => this._fetchRooms(), REFRESH_ROOMS_INTERVAL);
+            this.roomTimer = setInterval(() => this._fetchRooms(), REFRESH_ROOMS_INTERVAL);
         });
     }
 

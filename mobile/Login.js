@@ -8,7 +8,7 @@ const loginHandler = (cb) => {
     GoogleSignin.configure({scopes: ["https://www.googleapis.com/auth/calendar"], webClientId: '971985852714-qi0ngm24014mit3qv2filqhm6fsmgojl.apps.googleusercontent.com'}).then(() => {
         GoogleSignin.signIn().then(user => {
             cb(user.email, user.accessToken);
-        }).catch((error) => {
+        }).catch(error => {
             console.log(`google login error: ${error}`);
         });
     });
