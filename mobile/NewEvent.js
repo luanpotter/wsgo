@@ -22,6 +22,7 @@ import {
     Form
 } from 'native-base';
 import moment from 'moment';
+import { humanizeDiff } from './utils/Util';
 
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
@@ -29,30 +30,35 @@ export default class NewEvent extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            name: 'Quick reservation',
-            duration: '0:30',
-            start: 0,
-            end: 100,
-            startDate: props.startDate,
-            endDate: props.endDate
+        this.state = this.calculateValues([0, 100], props);
+        this.state.name = 'Quick Reservation';
+    }
+
+    calculateValues(values, props) {
+        let startTime = values[0];
+        let endTime = values[1];
+
+        let fixedStartDate = props.startDate;
+        let fixedEndDate = props.endDate;
+
+        let scale = fixedEndDate.diff(fixedStartDate, 'minutes');
+        let durationDiff = (endTime - startTime)/100 * scale;
+        let startTimeDiff = startTime/100 * scale;
+
+        let startDate = moment(fixedStartDate).add(startTimeDiff, 'minutes').startOf('minute');
+        let endDate = moment(startDate).add(durationDiff, 'minutes').startOf('minute');
+
+        return {
+            start: startTime,
+            end: endTime,
+            startDate,
+            endDate,
+            duration: humanizeDiff(endDate.diff(startDate))
         };
     }
 
     onSliderChange(values) {
-        let startTime = values[0];
-        let endTime = values[1];
-
-        let scale = endDate.diff(startDate, 'minutes');
-        let diff = (endTime - startTime)/100 * scale;
-        let startTimeDiff = startTime/100 * scale;
-
-        this.setState({
-            start: startTime,
-            end: endTime,
-            startDate: startDate.add(startTimeDiff, 'minutes'),
-            endDate: moment(startDate).add(diff, 'minutes')
-        });
+        this.setState(this.calculateValues(values, this.props));
     }
 
     render() {

@@ -59,9 +59,11 @@ export default class StateController {
         });
     };
 
-    createEvent = () => {
+    createEvent = (event) => {
         this.setState({
-            schedule: true
+            schedule: true,
+            startDate: event.startTime,
+            endDate: event.endTime
         });
     };
 

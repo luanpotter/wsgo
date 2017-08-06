@@ -19,8 +19,8 @@ import {
 
 import md5 from 'blueimp-md5';
 import moment from 'moment';
-import humanizeDuration from 'humanize-duration'
 
+import { humanizeDiff } from './utils/Util';
 import fetchRoom from './utils/CalendarService';
 
 const ds = new ListView.DataSource({
@@ -39,28 +39,11 @@ const Event = (props) => {
     const e = props.data;
     const uri = createUriFor(e);
 
-    const title = e.free
-        ? 'Livre'
-        : e.organizer.name;
-    const note = e.free
-        ? humanizeDuration(moment.duration(e.endTime.diff(e.startTime)), {
-            largest: 2,
-            delimiter: ' e ',
-            language: 'pt'
-        })
-        : e.text;
-
-    const badgeColor = !e.free
-        ? '#aa1111'
-        : '#11aa11';
-
-    const bgColor = e.free
-        ? '#eeffee'
-        : null;
-
-    const onPress = e.free
-        ? props.onPress
-        : undefined;
+    const title = e.free ? 'Livre' : e.organizer.name;
+    const note = e.free ? humanizeDiff(e.endTime.diff(e.startTime)) : e.text;
+    const badgeColor = !e.free ? '#aa1111' : '#11aa11';
+    const bgColor = e.free ? '#eeffee' : null;
+    const onPress = e.free ? props.onPress : undefined;
 
     return (
         <ListItem avatar style={{
@@ -115,7 +98,7 @@ export default function(props) {
                     <Title>{room.title}</Title>
                 </Body>
             </Header>
-            <ListView enableEmptySections={true} dataSource={ds.cloneWithRows(room.events)} renderRow={e => <Event onPress={props.schedule} data={e}/>}/>
+            <ListView enableEmptySections={true} dataSource={ds.cloneWithRows(room.events)} renderRow={e => <Event onPress={() => props.schedule(e)} data={e}/>}/>
         </Container>
     );
 }
