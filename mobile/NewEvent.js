@@ -30,8 +30,13 @@ export default class NewEvent extends Component {
 
     constructor(props) {
         super(props);
-        this.state = this.calculateValues([0, 100], props);
+        this.state = this.calculateValues([0, this.findEndFor(props, 30)], props);
         this.state.name = 'Quick Reservation';
+    }
+
+    findEndFor(dates, minutes) {
+        let scale = dates.endDate.diff(dates.startDate, 'minutes');
+        return 100 * minutes/scale;
     }
 
     calculateValues(values, props) {
