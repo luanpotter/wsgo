@@ -8,6 +8,8 @@ import {
 
 import fetchRoom from './CalendarService';
 
+import moment from 'moment';
+
 const FADE_TIMEOUT = 5000;
 const REFRESH_ROOMS_INTERVAL = 5000;
 
@@ -22,7 +24,9 @@ const INIT_STATE = {
     rooms: [],
     currentBeacon: undefined,
     currentRoom: undefined,
-    selectedRoom: undefined
+    selectedRoom: undefined,
+    startDate: moment().hour(6).minute(30).second(0),
+    endDate: moment().hour(8).minute(0).second(0)
 }
 
 export default class StateController {
@@ -173,4 +177,11 @@ export default class StateController {
         this.app.setState(state);
     }
 
+    startDate() {
+        return this.app.state.startDate;
+    }
+
+    endDate() {
+        return this.app.state.endDate;
+    }
 }

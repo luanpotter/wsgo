@@ -33,24 +33,26 @@ export default class NewEvent extends Component {
             name: 'Quick reservation',
             duration: '0:30',
             start: 0,
-            end: 100
+            end: 100,
+            startDate: props.startDate,
+            endDate: props.endDate
         };
     }
 
     onSliderChange(values) {
-        let start = values[0];
-        let end = values[1]
-        this.setState({start, end});
-    }
+        let startTime = values[0];
+        let endTime = values[1];
 
-    convertDates(startDate, endDate, startTime, endTime) {
         let scale = endDate.diff(startDate, 'minutes');
         let diff = (endTime - startTime)/100 * scale;
         let startTimeDiff = startTime/100 * scale;
-        return {
-            start: startDate.add(startTimeDiff, 'minutes'),
-            end: moment(startDate).add(diff, 'minutes')
-        }
+
+        this.setState({
+            start: startTime,
+            end: endTime,
+            startDate: startDate.add(startTimeDiff, 'minutes'),
+            endDate: moment(startDate).add(diff, 'minutes')
+        });
     }
 
     render() {
@@ -68,9 +70,9 @@ export default class NewEvent extends Component {
                     </Item>
                     <View style={styles.periodContainer}>
                         <View style={styles.period}>
-                            <Text style={styles.periodRange}>10:00</Text>
-                            <Text style={styles.periodDuration}>1 hora e 30 minutos</Text>
-                            <Text style={styles.periodRange}>14:00</Text>
+                            <Text style={styles.periodRange}>{this.state.startDate.format('HH:mm')}</Text>
+                            <Text style={styles.periodDuration}>{this.state.duration}</Text>
+                            <Text style={styles.periodRange}>{this.state.endDate.format('HH:mm')}</Text>
                         </View>
                     </View>
                     <View style={styles.slider}>
@@ -78,7 +80,7 @@ export default class NewEvent extends Component {
                             height: 40,
                             width: 40,
                             borderRadius: 20
-                        }} min={0} max={100} sliderLength={300} onValuesChangeFinish={this.onSliderChange} values={[this.state.start, this.state.end]} containerStyle={styles.sliderContainerStyle} selectedStyle={styles.sliderSelectedStyle} unselectedStyle={styles.sliderUnselectedStyle} markerStyle={styles.sliderMarkerStyle} pressedMarkerStyle={styles.sliderPressedMarkerStyle} trackStyle={styles.sliderTrackStyle}/>
+                        }} min={0} max={100} sliderLength={300} onValuesChangeFinish={values => this.onSliderChange(values)} values={[this.state.start, this.state.end]} containerStyle={styles.sliderContainerStyle} selectedStyle={styles.sliderSelectedStyle} unselectedStyle={styles.sliderUnselectedStyle} markerStyle={styles.sliderMarkerStyle} pressedMarkerStyle={styles.sliderPressedMarkerStyle} trackStyle={styles.sliderTrackStyle}/>
                     </View>
                     <Button style={styles.button} iconRight>
                         <Text>Create Event</Text>
@@ -172,27 +174,3 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     }
 });
-
-// <Slider style={{
-//     width: 300
-// }} step={1} minimumValue={0} maximumValue={100} onValueChange={val => this.setState({age: val})}/>
-
-// <Container>
-//     <Form>
-//         <Item floatingLabel>
-//             <Label>Name</Label >
-//             <Input value="Quick Meeting" onChangeText={name => this.setState({name})}/>
-//         </Item>
-//         <Item floatingLabel>
-//             <Label>Duration</Label>
-//             <Input value="0:30"/>
-//         </Item>
-//         <Item floatingLabel last>
-//             <Label>Test</Label>
-//         <Button onPress={() => this._schedule()}>
-//             <Text>Schedule!</Text>
-//         </Button>
-//     </Form>
-// </Container>
-// ontainer>             </Form >
-// </Form >
