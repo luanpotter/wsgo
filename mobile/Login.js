@@ -9,7 +9,7 @@ const loginHandler = (cb) => {
         GoogleSignin.signIn().then(user => {
             cb(user.email, user.accessToken);
         }).catch((error) => {
-            console.log(`beacon scanner error: ${error}`);
+            console.log(`google login error: ${error}`);
         });
     });
 }

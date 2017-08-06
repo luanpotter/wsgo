@@ -45,6 +45,10 @@
   dependencies:
     react-native-vector-icons "4.1.1"
 
+"@ptomasroos/react-native-multi-slider@0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@ptomasroos/react-native-multi-slider/-/react-native-multi-slider-0.0.8.tgz#86eb8a1617cfe069aaa7d138136619fae434b04f"
+
 "@segment/loosely-validate-event@^1.1.2":
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/@segment/loosely-validate-event/-/loosely-validate-event-1.1.2.tgz#d77840999e3f7e43e74b3b0d43391c1526f793b8"
