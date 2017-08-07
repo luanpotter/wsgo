@@ -82,9 +82,7 @@ export default class StateController {
                     }
                     this._fetchRooms(() => {
                         const currentRoom = this.app.state.rooms.find(room => room.name === this.app.state.currentRoom.name);
-                        const areSame = (ev, evData) => ev.startTime.isSame(evData.startDate) && ev.endTime.isSame(evData.endDate) && ev.text === evData.name;
-                        const sameOrganizer = event => event.organizer.email === this.app.state.session.email;
-                        const newEventFound = currentRoom.events.some(event => areSame(event, eventData) && sameOrganizer);
+                        const newEventFound = currentRoom.events.some(event => event.id === data.id);
                         if (newEventFound) {
                             this.setState({schedule: false, currentRoom});
                             ToastAndroid.show('Successfully created event.', ToastAndroid.SHORT);
@@ -199,7 +197,8 @@ export default class StateController {
             this.setState(updateState, cb);
         })
         .catch(err => {
-            ToastAndroid.show('Error fetching rooms', ToastAndroid.LONG);
+            console.error('Error fetching rooms.', err)
+            ToastAndroid.show('Error fetching rooms; ' + JSON.stringify(err), ToastAndroid.LONG);
         });
     }
 

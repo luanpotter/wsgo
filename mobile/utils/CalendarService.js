@@ -93,7 +93,7 @@ const injectFreeSlots = (now, events) => {
     return result;
 };
 
-const parseRoom = (responseText, now, title) => {
+const parseRoom = (responseText, now) => {
     const items = JSON.parse(responseText)
         .items;
 
@@ -151,6 +151,7 @@ const parseRoom = (responseText, now, title) => {
             return self && self.responseStatus === 'accepted'
         })
         .map(e => ({
+            id: e.id,
             text: e.summary,
             displayTime: date(e.start),
             startTime: e.startTime,
