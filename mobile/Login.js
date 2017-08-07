@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import {StyleSheet, View, ToastAndroid } from 'react-native';
 
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
 
@@ -9,11 +9,13 @@ const loginHandler = (cb) => {
         GoogleSignin.signIn().then(user => {
             cb(user.email, user.accessToken);
         }).catch(error => {
-            console.log(`google login error: ${error}`);
+            console.error(`google login error: ${error}`);
+            ToastAndroid.show(`There was an error on login: ${error}`, ToastAndroid.LONG);
             setTimeout(() => loginHandler(cb), 500);
         });
     }).catch(error => {
-        console.log(`google config error: ${error}`);
+        console.error(`google config error: ${error}`);
+        ToastAndroid.show(`There was an error on login config: ${error}`, ToastAndroid.LONG);
         setTimeout(() => loginHandler(cb), 500);
     });
 }
