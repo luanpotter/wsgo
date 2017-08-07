@@ -41,7 +41,7 @@ export default class App extends Component {
             <Container style={{
                 height: '100%'
             }}>
-                {this.state.schedule && <NewEvent back={this.ctrl.cancelCreateEvent} startDate={this.ctrl.startDate()} endDate={this.ctrl.endDate()} scheduleEvent={this.ctrl.scheduleEvent} />}
+                {this.state.schedule && <NewEvent room={room} back={this.ctrl.cancelCreateEvent} startDate={this.ctrl.startDate()} endDate={this.ctrl.endDate()} scheduleEvent={this.ctrl.scheduleEvent} />}
                 {!this.state.schedule && <Room room={room} back={this.ctrl.forceAll} schedule={this.ctrl.createEvent}/>}
             </Container>
         );

@@ -1,14 +1,8 @@
 import moment from 'moment';
-import { BackHandler, ToastAndroid } from 'react-native';
+import {BackHandler, ToastAndroid} from 'react-native';
 
-import {
-    loadBeacons,
-    getBeacons,
-    getBeaconsArray,
-    registerBeaconScanner,
-    unregisterBeaconScanner
-} from './BeaconService';
-import { fetchRoom, createEvent } from './CalendarService';
+import {loadBeacons, getBeacons, getBeaconsArray, registerBeaconScanner, unregisterBeaconScanner} from './BeaconService';
+import {fetchRoom, createEvent} from './CalendarService';
 
 const FADE_TIMEOUT = 5000;
 const REFRESH_ROOMS_INTERVAL = 5000;
@@ -30,7 +24,7 @@ const INIT_STATE = {
 }
 
 export default class StateController {
-    
+
     beacons = {};
 
     constructor(app) {
@@ -42,10 +36,10 @@ export default class StateController {
         registerBeaconScanner(currentBeacon => this._updateBeaconInformation(currentBeacon));
         BackHandler.addEventListener('main', () => {
             if (this.app.state.schedule) {
-                this.setState({ schedule: false });
+                this.setState({schedule: false});
                 return true;
             } else if (this.app.state.currentRoom) {
-                this.setState({ currentRoom: undefined });
+                this.setState({currentRoom: undefined});
                 return true;
             } else {
                 return false;
@@ -60,10 +54,7 @@ export default class StateController {
     };
 
     forceAll = () => {
-        this.setState({
-            forceAll: true,
-            currentRoom: undefined
-        });
+        this.setState({forceAll: true, currentRoom: undefined});
     };
 
     toggleForceAll = () => {
@@ -73,15 +64,11 @@ export default class StateController {
     };
 
     createEvent = event => {
-        this.setState({
-            schedule: true,
-            startDate: event.startTime,
-            endDate: event.endTime
-        });
+        this.setState({schedule: true, startDate: event.startTime, endDate: event.endTime});
     };
 
     cancelCreateEvent = () => {
-        this.setState({ schedule: false });
+        this.setState({schedule: false});
     };
 
     scheduleEvent = eventData => {
@@ -99,10 +86,7 @@ export default class StateController {
                         const sameOrganizer = event => event.organizer.email === this.app.state.session.email;
                         const newEventFound = currentRoom.events.some(event => areSame(event, eventData) && sameOrganizer);
                         if (newEventFound) {
-                            this.setState({
-                                schedule: false,
-                                currentRoom
-                            });
+                            this.setState({schedule: false, currentRoom});
                             ToastAndroid.show('Successfully created event.', ToastAndroid.SHORT);
                         } else {
                             console.log('Failed to fetch newly created event from the server, let\'s try again shortly.');
@@ -123,9 +107,7 @@ export default class StateController {
     selectRoom = (name) => {
         const rooms = this.app.state.rooms;
         const currentRoom = rooms.find(room => room.name === name);
-        this.setState({
-            currentRoom
-        });
+        this.setState({currentRoom});
     };
 
     onUserLogged = (email, token) => {
@@ -157,9 +139,9 @@ export default class StateController {
             }, FADE_TIMEOUT)
         };
 
-        const info = key in getBeacons() ?
-            getBeacons()[key] :
-            {
+        const info = key in getBeacons()
+            ? getBeacons()[key]
+            : {
                 name: 'UNKNOWN'
             };
         Object.assign(beacon, info);
@@ -179,27 +161,22 @@ export default class StateController {
         const prevBeacon = this.app.state.currentBeacon;
 
         if (!currentBeacon && prevBeacon) {
-            this.setState({
-                currentBeacon: undefined
-            });
+            this.setState({currentBeacon: undefined});
         }
 
         if (currentBeacon && (!prevBeacon || prevBeacon.name !== currentBeacon.name)) {
-            this.setState({
-                currentBeacon
-            });
+            this.setState({currentBeacon});
         }
     };
 
     _getCloserBeacon() {
-        const beacons = Object.keys(this.beacons)
-            .map(key => this.beacons[key]);
+        const beacons = Object.keys(this.beacons).map(key => this.beacons[key]);
         if (!beacons || !beacons.length) {
             return undefined;
         }
-        return beacons.reduce((prev, curr) => prev.distance < curr.distance ?
-            prev :
-            curr);
+        return beacons.reduce((prev, curr) => prev.distance < curr.distance
+            ? prev
+            : curr);
     }
 
     _fetchRooms(cb) {
@@ -211,13 +188,18 @@ export default class StateController {
             }
 
             const currentBeacon = this.app.state.currentBeacon;
-            const updateState = { rooms };
+            const updateState = {
+                rooms
+            };
 
             if (currentBeacon && !this.app.state.forceAll) {
                 updateState.currentRoom = rooms.find(room => room.name === currentBeacon.name);
             }
 
             this.setState(updateState, cb);
+        })
+        .catch(err => {
+            ToastAndroid.show('Error fetching rooms', ToastAndroid.LONG);
         });
     }
 

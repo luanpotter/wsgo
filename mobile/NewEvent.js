@@ -22,21 +22,26 @@ import {
     Form
 } from 'native-base';
 import moment from 'moment';
-import { humanizeDiff } from './utils/Util';
+import {humanizeDiff} from './utils/Util';
 
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
+
+const roundMinutes = (m) => 5 * Math.round(m / 5);
 
 export default class NewEvent extends Component {
 
     constructor(props) {
         super(props);
-        this.state = this.calculateValues([0, this.findEndFor(props, 30)], props);
+        this.state = this.calculateValues([
+            0,
+            this.findEndFor(props, 30)
+        ], props);
         this.state.name = 'Quick Reservation';
     }
 
     findEndFor(dates, minutes) {
         let scale = dates.endDate.diff(dates.startDate, 'minutes');
-        return 100 * minutes/scale;
+        return Math.min(100, Math.round(100 * minutes / scale));
     }
 
     calculateValues(values, props) {
@@ -47,18 +52,27 @@ export default class NewEvent extends Component {
         let fixedEndDate = props.endDate;
 
         let scale = fixedEndDate.diff(fixedStartDate, 'minutes');
-        let durationDiff = (endTime - startTime)/100 * scale;
-        let startTimeDiff = startTime/100 * scale;
+        let durationDiff = (endTime - startTime) / 100 * scale;
+        let startTimeDiff = startTime / 100 * scale;
 
-        let startDate = moment(fixedStartDate).add(startTimeDiff, 'minutes').startOf('minute');
-        let endDate = moment(startDate).add(durationDiff, 'minutes').startOf('minute');
+        let startDate = moment(fixedStartDate).add(startTimeDiff, 'minutes');
+        let endDate = moment(startDate).add(durationDiff, 'minutes');
+
+        startDate.minute(roundMinutes(startDate.minute())).second(0);
+        endDate.minute(roundMinutes(endDate.minute())).second(0);
+
+        // snap
+        // startTime = this.findEndFor(props, startDate.diff(props.startDate, 'minutes'));
+        // endTime = this.findEndFor(props, endDate.diff(props.startDate, 'minutes'));
+
+        const durationInMinutes = roundMinutes(endDate.diff(startDate, 'minutes'));
 
         return {
             start: startTime,
             end: endTime,
             startDate,
             endDate,
-            duration: humanizeDiff(endDate.diff(startDate))
+            duration: humanizeDiff(durationInMinutes * 60 * 1000)
         };
     }
 
@@ -74,7 +88,7 @@ export default class NewEvent extends Component {
                         <Icon name='arrow-back'/>
                     </Button>
                     <Body>
-                        <Title>New Event</Title>
+                        <Title>{this.props.room.title}</Title>
                     </Body>
                 </Header>
                 <Form style={styles.form}>
@@ -106,11 +120,7 @@ export default class NewEvent extends Component {
     }
 
     _schedule() {
-        this.props.scheduleEvent({
-            name: this.state.name,
-            startDate: this.state.startDate,
-            endDate: this.state.endDate
-        });
+        this.props.scheduleEvent({name: this.state.name, startDate: this.state.startDate, endDate: this.state.endDate});
     }
 
 };
