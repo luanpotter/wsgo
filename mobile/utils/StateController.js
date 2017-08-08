@@ -96,7 +96,7 @@ export default class StateController {
                             const newEventFound = currentRoom.events.some(event => event.id === data.id);
                             if (newEventFound) {
                                 this.setState({schedule: false, currentRoom});
-                                ToastAndroid.show('Successfully created event.', ToastAndroid.SHORT);
+                                ToastAndroid.show('Evento criado com sucesso.', ToastAndroid.SHORT);
                             } else {
                                 console.log('Failed to fetch newly created event from the server, let\'s try again shortly.');
                                 setTimeout(() => update(tryouts - 1), 250);
@@ -105,12 +105,12 @@ export default class StateController {
                     };
                     update(10);
                 } else {
-                    ToastAndroid.show('The event was created, but the room did not accept.', ToastAndroid.LONG);
+                    ToastAndroid.show('A sala recusou o evento.', ToastAndroid.LONG);
                     resolve();
                 }
             }).catch(error => {
                 console.log('Received error ', error);
-                ToastAndroid.show('There was an unexpected error: ' + JSON.stringify(error), ToastAndroid.LONG);
+                ToastAndroid.show('Erro inesperado: ' + JSON.stringify(error), ToastAndroid.LONG);
                 resolve();
             });
         });
