@@ -67,7 +67,7 @@ export default function(props) {
         <Container>
             <Header>
                 <Body>
-                    <Title>All Rooms</Title>
+                    <Title>Salas</Title>
                 </Body>
                 <Right>
                     <Button transparent onPress={props.toggleForceAll}>

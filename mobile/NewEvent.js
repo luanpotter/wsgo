@@ -38,7 +38,7 @@ export default class NewEvent extends Component {
             0,
             this.findEndFor(props, 30)
         ], props);
-        this.state.name = 'Quick Reservation';
+        this.state.name = 'Reserva (wsgo)';
         this.state.loading = false;
     }
 
@@ -96,7 +96,7 @@ export default class NewEvent extends Component {
                 </Header>
                 <Form style={styles.form}>
                     <Item style={styles.clear} floatingLabel>
-                        <Label>Title</Label>
+                        <Label>Título</Label>
                         <Input value={this.state.name} onChangeText={name => this.setState({name})}/>
                     </Item>
                     <View style={styles.periodContainer}>
@@ -114,7 +114,7 @@ export default class NewEvent extends Component {
                         }} min={0} max={100} sliderLength={300} onValuesChangeFinish={values => this.onSliderChange(values)} values={[this.state.start, this.state.end]} containerStyle={styles.sliderContainerStyle} selectedStyle={styles.sliderSelectedStyle} unselectedStyle={styles.sliderUnselectedStyle} markerStyle={styles.sliderMarkerStyle} pressedMarkerStyle={styles.sliderPressedMarkerStyle} trackStyle={styles.sliderTrackStyle}/>
                     </View>
                     {!this.state.loading && <Button style={styles.button} iconRight onPress={() => this._schedule()}>
-                        <Text>Create Event</Text>
+                        <Text>Enviar</Text>
                         <Icon name='cloud-upload'/>
                     </Button>}
                     {this.state.loading && <Spinner style={{
