@@ -43,7 +43,7 @@ const injectFreeSlots = (now, events) => {
             return events;
         }
         if (prev) {
-            if (prev.endTime.isBefore(curr.startTime, 'minute')) {
+            if (curr.startTime.diff(prev.endTime, 'minute') > 5) {
                 result.push({
                     free: true,
                     displayTime: prev.endTime.format('HH:mm'),

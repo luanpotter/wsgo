@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {BackHandler, ToastAndroid} from 'react-native';
+import {AppState, BackHandler, ToastAndroid} from 'react-native';
 
 import {loadBeacons, getBeacons, getBeaconsArray, registerBeaconScanner, unregisterBeaconScanner} from './BeaconService';
 import {fetchRoom, createEvent} from './CalendarService';
@@ -20,7 +20,8 @@ const INIT_STATE = {
     currentRoom: undefined,
     selectedRoom: undefined,
     startDate: undefined,
-    endDate: undefined
+    endDate: undefined,
+    appState: AppState.currentState
 }
 
 export default class StateController {
@@ -45,12 +46,21 @@ export default class StateController {
                 return false;
             }
         });
+
+        AppState.addEventListener('change', (nextAppState) => {
+            if (this.app.state.appState.match(/inactive|background/) && nextAppState === 'active') {
+                this.setState({forceAll: false, appState: nextAppState});
+            } else {
+                this.setState({appState: nextAppState})
+            }
+        });
     };
 
     unmount = () => {
         unregisterBeaconScanner();
         this.roomTimer && clearInterval(this.roomTimer);
         BackHandler.removeEventListener('main');
+        AppState.removeEventListener('change');
     };
 
     forceAll = () => {

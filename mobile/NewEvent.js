@@ -26,7 +26,9 @@ import {humanizeDiff} from './utils/Util';
 
 import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
-const roundMinutes = (m) => 5 * Math.round(m / 5);
+const roundUpMinutes = (m) => 5 * Math.ceil(m / 5);
+const roundDownMinutes = (m) => 5 * Math.floor(m / 5);
+
 
 export default class NewEvent extends Component {
 
@@ -58,14 +60,14 @@ export default class NewEvent extends Component {
         let startDate = moment(fixedStartDate).add(startTimeDiff, 'minutes');
         let endDate = moment(startDate).add(durationDiff, 'minutes');
 
-        startDate.minute(roundMinutes(startDate.minute())).second(0);
-        endDate.minute(roundMinutes(endDate.minute())).second(0);
+        startDate.minute(roundUpMinutes(startDate.minute())).second(0);
+        endDate.minute(roundDownMinutes(endDate.minute())).second(0);
 
         // snap
         // startTime = this.findEndFor(props, startDate.diff(props.startDate, 'minutes'));
         // endTime = this.findEndFor(props, endDate.diff(props.startDate, 'minutes'));
 
-        const durationInMinutes = roundMinutes(endDate.diff(startDate, 'minutes'));
+        const durationInMinutes = roundUpMinutes(endDate.diff(startDate, 'minutes'));
 
         return {
             start: startTime,
