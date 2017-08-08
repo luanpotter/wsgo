@@ -52,7 +52,7 @@ const injectFreeSlots = (now, events) => {
                 });
             }
         } else {
-            if (now.diff(curr.startTime, 'minute') > 5) {
+            if (curr.startTime.diff(now, 'minute') > 5) {
                 result.push({
                     free: true,
                     displayTime: now.format('HH:mm'),
