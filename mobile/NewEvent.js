@@ -18,6 +18,7 @@ import {
     Text,
     Item,
     Label,
+    Spinner,
     Input,
     Form
 } from 'native-base';
@@ -29,7 +30,6 @@ import MultiSlider from '@ptomasroos/react-native-multi-slider';
 const roundUpMinutes = (m) => 5 * Math.ceil(m / 5);
 const roundDownMinutes = (m) => 5 * Math.floor(m / 5);
 
-
 export default class NewEvent extends Component {
 
     constructor(props) {
@@ -39,11 +39,12 @@ export default class NewEvent extends Component {
             this.findEndFor(props, 30)
         ], props);
         this.state.name = 'Quick Reservation';
+        this.state.loading = false;
     }
 
     findEndFor(dates, minutes) {
         let scale = dates.endDate.diff(dates.startDate, 'minutes');
-        return Math.min(100, Math.round(100 * minutes / scale));
+        return Math.min(100, Math.ceil(100 * minutes / scale));
     }
 
     calculateValues(values, props) {
@@ -112,17 +113,22 @@ export default class NewEvent extends Component {
                             borderRadius: 20
                         }} min={0} max={100} sliderLength={300} onValuesChangeFinish={values => this.onSliderChange(values)} values={[this.state.start, this.state.end]} containerStyle={styles.sliderContainerStyle} selectedStyle={styles.sliderSelectedStyle} unselectedStyle={styles.sliderUnselectedStyle} markerStyle={styles.sliderMarkerStyle} pressedMarkerStyle={styles.sliderPressedMarkerStyle} trackStyle={styles.sliderTrackStyle}/>
                     </View>
-                    <Button style={styles.button} iconRight onPress={() => this._schedule()}>
+                    {!this.state.loading && <Button style={styles.button} iconRight onPress={() => this._schedule()}>
                         <Text>Create Event</Text>
                         <Icon name='cloud-upload'/>
-                    </Button>
+                    </Button>}
+                    {this.state.loading && <Spinner style={{
+                        marginTop: 15
+                    }} color="gray"/>}
                 </Form>
             </Container>
         );
     }
 
     _schedule() {
-        this.props.scheduleEvent({name: this.state.name, startDate: this.state.startDate, endDate: this.state.endDate});
+        const finish = () => this.setState({loading: false});
+        this.setState({loading: true});
+        this.props.scheduleEvent({name: this.state.name, startDate: this.state.startDate, endDate: this.state.endDate}).then(finish);
     }
 
 };

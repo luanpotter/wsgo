@@ -82,33 +82,37 @@ export default class StateController {
     };
 
     scheduleEvent = eventData => {
-        createEvent(this.app.state.session, this.app.state.currentRoom, eventData).then(data => {
-            console.log('Received success ', data);
-            const success = data.status === 'confirmed';
-            if (success) {
-                const update = tryouts => {
-                    if (tryouts === 0) {
-                        ToastAndroid.show('There was an error fetching your event data, but it seems to have been created.', ToastAndroid.LONG);
-                    }
-                    this._fetchRooms(() => {
-                        const currentRoom = this.app.state.rooms.find(room => room.name === this.app.state.currentRoom.name);
-                        const newEventFound = currentRoom.events.some(event => event.id === data.id);
-                        if (newEventFound) {
-                            this.setState({schedule: false, currentRoom});
-                            ToastAndroid.show('Successfully created event.', ToastAndroid.SHORT);
-                        } else {
-                            console.log('Failed to fetch newly created event from the server, let\'s try again shortly.');
-                            setTimeout(() => update(tryouts - 1), 250);
+        return new Promise(resolve => {
+            createEvent(this.app.state.session, this.app.state.currentRoom, eventData).then(data => {
+                console.log('Received success ', data);
+                const success = data.status === 'confirmed';
+                if (success) {
+                    const update = tryouts => {
+                        if (tryouts === 0) {
+                            ToastAndroid.show('There was an error fetching your event data, but it seems to have been created.', ToastAndroid.LONG);
                         }
-                    });
-                };
-                update(10);
-            } else {
-                ToastAndroid.show('The event was created, but the room did not accept.', ToastAndroid.LONG);
-            }
-        }).catch(error => {
-            console.log('Received error ', error);
-            ToastAndroid.show('There was an unexpected error: ' + JSON.stringify(error), ToastAndroid.LONG);
+                        this._fetchRooms(() => {
+                            const currentRoom = this.app.state.rooms.find(room => room.name === this.app.state.currentRoom.name);
+                            const newEventFound = currentRoom.events.some(event => event.id === data.id);
+                            if (newEventFound) {
+                                this.setState({schedule: false, currentRoom});
+                                ToastAndroid.show('Successfully created event.', ToastAndroid.SHORT);
+                            } else {
+                                console.log('Failed to fetch newly created event from the server, let\'s try again shortly.');
+                                setTimeout(() => update(tryouts - 1), 250);
+                            }
+                        });
+                    };
+                    update(10);
+                } else {
+                    ToastAndroid.show('The event was created, but the room did not accept.', ToastAndroid.LONG);
+                    resolve();
+                }
+            }).catch(error => {
+                console.log('Received error ', error);
+                ToastAndroid.show('There was an unexpected error: ' + JSON.stringify(error), ToastAndroid.LONG);
+                resolve();
+            });
         });
     };
 

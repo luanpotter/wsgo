@@ -111,8 +111,12 @@ const parseRoom = (responseText, now) => {
         if (!e.start || !e.end) {
             return true;
         }
-        return moment(e.start.dateTime)
-            .isSameOrBefore(now) && moment(e.start.endTime)
+        const start = moment(e.start.dateTime)
+            .add(-5, 'minute');
+        const end = moment(e.start.endTime)
+            .add(5, 'minute');
+        return start
+            .isSameOrBefore(now) && end
             .isSameOrAfter(now);
     };
 
