@@ -39,7 +39,7 @@ export default class StateController {
                 this.setState({schedule: false});
                 return true;
             } else if (this.app.state.currentRoom) {
-                this.setState({currentRoom: undefined});
+                this.setState({forceAll: true, currentRoom: undefined});
                 return true;
             } else {
                 return false;
@@ -195,8 +195,7 @@ export default class StateController {
             }
 
             this.setState(updateState, cb);
-        })
-        .catch(err => {
+        }).catch(err => {
             console.error('Error fetching rooms.', err)
             ToastAndroid.show('Error fetching rooms; ' + JSON.stringify(err), ToastAndroid.LONG);
         });
