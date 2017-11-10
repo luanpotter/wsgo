@@ -1,7 +1,12 @@
 import moment from 'moment';
-import {
-    statusString
-} from './StatusGenerator.js';
+import {statusString} from './StatusGenerator.js';
+
+const timezoneOffset = () => {
+    const date = new Date();
+    const offsetInHours = -(date.getTimezoneOffset() / 60);
+    const abs = Math.abs(offsetInHours);
+    return (offsetInHours >= 0 ? '+' : '-') + (abs < 10 ? '0' + abs : abs);
+};
 
 const fetchRoom = (beacon, auth) => {
     const now = moment();
@@ -12,16 +17,19 @@ const fetchRoom = (beacon, auth) => {
         .format('YYYY-MM-DD');
 
     const room = beacon.room;
-    const url = `https://content.googleapis.com/calendar/v3/calendars/${room}/events?singleEvents=true&timeMax=${d2}T0%3A00%3A00-03%3A00&timeMin=${d1}T0%3A00%3A00-03%3A00&key=b5IH1R6GRJNWwFxteNYVRDBF`;
 
-    // console.log(`curl -H \'Authorization: Bearer ${auth}\' \"${url}\"`);
+    const offset = timezoneOffset();
+    const url = `https://content.googleapis.com/calendar/v3/calendars/${room}/events?singleEvents=true&timeMax=${d2}T0%3A00%3A00${offset}%3A00&timeMin=${d1}T0%3A00%3A00${offset}%3A00&key=b5IH1R6GRJNWwFxteNYVRDBF`;
+
+
+    console.log(`curl -H \'Authorization: Bearer ${auth}\' \"${url}\"`);
     // console.log('room', beacon.title);
 
     return fetch(url, {
-            headers: {
-                Authorization: `Bearer ${auth}`
-            }
-        })
+        headers: {
+            Authorization: `Bearer ${auth}`
+        }
+    })
         .then(response => ({
             name: beacon.name,
             title: beacon.title,
@@ -137,10 +145,10 @@ const parseRoom = (responseText, now) => {
     };
 
     const events = items.map(e => {
-            e.startTime = e.start ? moment(e.start.dateTime) : undefined;
-            e.endTime = e.end ? moment(e.end.dateTime) : undefined;
-            return e;
-        })
+        e.startTime = e.start ? moment(e.start.dateTime) : undefined;
+        e.endTime = e.end ? moment(e.end.dateTime) : undefined;
+        return e;
+    })
         .filter(e => {
             if (!now || !e.end) {
                 return true;
@@ -183,8 +191,11 @@ const createEvent = (user, room, eventData) => {
         endDate,
         name
     } = eventData;
-    const start = startDate.format('YYYY-MM-DDTHH:mm:ss-03:00');
-    const end = endDate.format('YYYY-MM-DDTHH:mm:ss-03:00');
+
+    const offset = timezoneOffset();
+
+    const start = startDate.format(`YYYY-MM-DDTHH:mm:ss${offset}:00`);
+    const end = endDate.format(`YYYY-MM-DDTHH:mm:ss${offset}:00`);
 
     const bodyJson = {
         end: {
@@ -203,13 +214,13 @@ const createEvent = (user, room, eventData) => {
     const url = `https://content.googleapis.com/calendar/v3/calendars/${userEncoded}/events?alt=json&key=${key}`;
 
     return fetch(url, {
-            headers: {
-                Authorization: `Bearer ${user.token}`,
-                'content-type': 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify(bodyJson)
-        })
+        headers: {
+            Authorization: `Bearer ${user.token}`,
+            'content-type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify(bodyJson)
+    })
         .then(response => JSON.parse(response._bodyText));
 };
 
