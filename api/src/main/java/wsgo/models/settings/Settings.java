@@ -9,7 +9,7 @@ import io.yawp.repository.annotations.Json;
 import java.util.List;
 import java.util.Map;
 
-@Endpoint(path = "/settings", kind = "/settings_v2")
+@Endpoint(path = "/settings", kind = "settings_v2")
 public class Settings {
 
     @Id
