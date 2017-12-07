@@ -22,6 +22,6 @@ public class Settings {
     String version;
 
     @Json
-    Map<String, List<RoomSettings>> rooms;
+    List<RoomSettings> rooms;
 
 }
