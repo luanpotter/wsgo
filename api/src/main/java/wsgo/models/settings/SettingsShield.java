@@ -1,7 +1,7 @@
 package wsgo.models.settings;
 
-import io.yawp.repository.shields.Shield;
 import io.yawp.repository.IdRef;
+import io.yawp.repository.shields.Shield;
 
 public class SettingsShield extends Shield<Settings> {
 
@@ -9,6 +9,7 @@ public class SettingsShield extends Shield<Settings> {
     public void defaults() {
         allow(false);
     }
+
 
     @Override
     public void show(IdRef<Settings> id) {
@@ -19,5 +20,4 @@ public class SettingsShield extends Shield<Settings> {
     public void index(IdRef<?> parentId) {
         allow(true);
     }
-
 }

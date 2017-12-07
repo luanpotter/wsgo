@@ -10,7 +10,7 @@
 
     <properties>
         <yawp.version>2.0.0alpha</yawp.version>
-        <appengine.app.version>1</appengine.app.version>
+        <appengine.app.version>2</appengine.app.version>
         <appengine.target.version>1.9.51</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

@@ -6,9 +6,10 @@ import io.yawp.repository.annotations.Id;
 import io.yawp.repository.annotations.Index;
 import io.yawp.repository.annotations.Json;
 
+import java.util.List;
 import java.util.Map;
 
-@Endpoint(path = "/settings")
+@Endpoint(path = "/settings", kind = "/settings_v2")
 public class Settings {
 
     @Id
@@ -17,7 +18,10 @@ public class Settings {
     @Index(normalize = false)
     String domain;
 
+    @Index(normalize = false)
+    String version;
+
     @Json
-    Map<Integer, RoomSettings> rooms;
+    Map<String, List<RoomSettings>> rooms;
 
 }
