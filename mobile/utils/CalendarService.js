@@ -8,18 +8,16 @@ const timezoneOffset = () => {
     return (offsetInHours >= 0 ? '+' : '-') + (abs < 10 ? '0' + abs : abs);
 };
 
-const fetchRoom = (beacon, auth) => {
+const fetchRoom = (room, auth) => {
     const now = moment();
 
     const d1 = now.format('YYYY-MM-DD');
-    const d2 = now.clone()
-        .add(+1, 'days')
-        .format('YYYY-MM-DD');
+    const d2 = now.clone().add(+1, 'days').format('YYYY-MM-DD');
 
-    const room = beacon.room;
+    const email = room.email;
 
     const offset = timezoneOffset();
-    const url = `https://content.googleapis.com/calendar/v3/calendars/${room}/events?singleEvents=true&timeMax=${d2}T0%3A00%3A00${offset}%3A00&timeMin=${d1}T0%3A00%3A00${offset}%3A00&key=b5IH1R6GRJNWwFxteNYVRDBF`;
+    const url = `https://content.googleapis.com/calendar/v3/calendars/${email}/events?singleEvents=true&timeMax=${d2}T0%3A00%3A00${offset}%3A00&timeMin=${d1}T0%3A00%3A00${offset}%3A00&key=b5IH1R6GRJNWwFxteNYVRDBF`;
 
 
     console.log(`curl -H \'Authorization: Bearer ${auth}\' \"${url}\"`);
@@ -29,13 +27,11 @@ const fetchRoom = (beacon, auth) => {
         headers: {
             Authorization: `Bearer ${auth}`
         }
-    })
-        .then(response => ({
-            name: beacon.name,
-            title: beacon.title,
-            email: beacon.room,
-            ...parseRoom(response._bodyText, now)
-        }));
+    }).then(response => ({
+        title: room.title,
+        email: room.email,
+        ...parseRoom(response._bodyText, now)
+    }));
 };
 
 const injectFreeSlots = (now, events) => {
@@ -78,15 +74,11 @@ const injectFreeSlots = (now, events) => {
             free: true,
             displayTime: now.format('HH:mm'),
             startTime: now.clone(),
-            endTime: now.clone()
-                .add(1, 'days')
-                .startOf('day')
+            endTime: now.clone().add(1, 'days').startOf('day')
         });
     } else {
         const last = events[events.length - 1];
-        const endOfDay = now.clone()
-            .add(1, 'days')
-            .startOf('day')
+        const endOfDay = now.clone().add(1, 'days').startOf('day')
 
         if (last.endTime.isBefore(endOfDay, 'minute')) {
             result.push({
@@ -102,15 +94,13 @@ const injectFreeSlots = (now, events) => {
 };
 
 const parseRoom = (responseText, now) => {
-    const items = JSON.parse(responseText)
-        .items;
+    const items = JSON.parse(responseText).items;
 
     if (!items) {
         return;
     }
 
-    const date = d => (d && d.dateTime) ? moment(d.dateTime)
-        .format('HH:mm') : 'All Day';
+    const date = d => (d && d.dateTime) ? moment(d.dateTime).format('HH:mm') : 'All Day';
 
     const checkActive = (e) => {
         if (!now) {
@@ -119,13 +109,9 @@ const parseRoom = (responseText, now) => {
         if (!e.start || !e.end) {
             return true;
         }
-        const start = moment(e.start.dateTime)
-            .add(-5, 'minute');
-        const end = moment(e.start.endTime)
-            .add(5, 'minute');
-        return start
-            .isSameOrBefore(now) && end
-            .isSameOrAfter(now);
+        const start = moment(e.start.dateTime).add(-5, 'minute');
+        const end = moment(e.start.endTime).add(5, 'minute');
+        return start.isSameOrBefore(now) && end.isSameOrAfter(now);
     };
 
     const extractOrganizer = (e) => {

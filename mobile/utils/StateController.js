@@ -92,7 +92,7 @@ export default class StateController {
                             ToastAndroid.show('There was an error fetching your event data, but it seems to have been created.', ToastAndroid.LONG);
                         }
                         this._fetchRooms(() => {
-                            const currentRoom = this.app.state.rooms.find(room => room.name === this.app.state.currentRoom.name);
+                            const currentRoom = this.app.state.rooms.find(room => room.title === this.app.state.currentRoom.title);
                             const newEventFound = currentRoom.events.some(event => event.id === data.id);
                             if (newEventFound) {
                                 this.setState({schedule: false, currentRoom});
@@ -116,9 +116,9 @@ export default class StateController {
         });
     };
 
-    selectRoom = (name) => {
+    selectRoom = (title) => {
         const rooms = this.app.state.rooms;
-        const currentRoom = rooms.find(room => room.name === name);
+        const currentRoom = rooms.find(room => room.title === title);
         this.setState({currentRoom});
     };
 
@@ -151,11 +151,9 @@ export default class StateController {
             }, FADE_TIMEOUT)
         };
 
-        const info = key in getBeacons()
-            ? getBeacons()[key]
-            : {
-                name: 'UNKNOWN'
-            };
+        const info = key in getBeacons() ? getBeacons()[key] : {
+            title: 'UNKNOWN'
+        };
         Object.assign(beacon, info);
 
         beacons[key] = beacon;
@@ -176,7 +174,7 @@ export default class StateController {
             this.setState({currentBeacon: undefined});
         }
 
-        if (currentBeacon && (!prevBeacon || prevBeacon.name !== currentBeacon.name)) {
+        if (currentBeacon && (!prevBeacon || prevBeacon.title !== currentBeacon.title)) {
             this.setState({currentBeacon});
         }
     };
@@ -200,12 +198,10 @@ export default class StateController {
             }
 
             const currentBeacon = this.app.state.currentBeacon;
-            const updateState = {
-                rooms
-            };
+            const updateState = { rooms };
 
             if (currentBeacon && !this.app.state.forceAll) {
-                updateState.currentRoom = rooms.find(room => room.name === currentBeacon.name);
+                updateState.currentRoom = rooms.find(room => room.title === currentBeacon.title);
             }
 
             this.setState(updateState, cb);
